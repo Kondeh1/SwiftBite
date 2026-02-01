@@ -5,35 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <link rel="stylesheet" href="/styles/style.css" />
     <title>SwiftBite Login</title>
   </head>
   <body>
-    <%- include("partials/header.ejs") %>
+    <% if (locals.message) { %>
+      <div class="userExist">
+      <p><%= message %></p>
+    </div>
+    <% } %>
 
+    <% if (error.length > 0) { %>
+       <div class="userExist">
+        <p><%= error %></p>
+       </div>
+    <% } %>
+  
     <div class="container">
-      <form action="/login" method="post">
-        <div class="login-section">
-          <img
-            src="/images/Final SwiftBite Logo.png"
-            alt="SwiftBite Logo"
-            class="logo"
-          />
-          <h2>Log in or sign up</h2>
+      <div class="login-section">
+        <img
+          src="/images/Final SwiftBite Logo.png"
+          alt="SwiftBite Logo"
+          class="logo"
+        />
+        <h2>Log in</h2>
 
+        <form action="/login" method="post">
           <div class="input-group">
             <label for="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Enter your email"
-            />
-            <span id="tick" class="valid-tick">✓</span>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Enter your email"
+              />
+              <span id="tick" class="valid-tick">✓</span>
+            </div>
           </div>
 
           <div class="input-group">
@@ -46,7 +56,7 @@
                 placeholder="••••••••"
               />
               <button type="button" id="togglePassword" class="view-toggle-btn">
-                <i class="fa-sharp fa-solid fa-eye-slash"></i>
+                <i class="fa-solid fa-eye-slash"></i>
               </button>
             </div>
           </div>
@@ -54,68 +64,62 @@
           <div class="remember-me">
             <span>Remember me on this device</span>
             <label class="switch">
-              <input type="checkbox" checked />
+              <input type="checkbox" />
               <span class="slider"></span>
             </label>
           </div>
 
-          <button id="continueBtn" class="continue-btn" disabled>
+          <button id="continueBtn"  type="submit" class="continue-btn" disabled>
             Continue
           </button>
-        </div>
-      </form>
+
+         
+        </form>
+
+        <div class="divider"><span>or</span></div>
+
+          <form action="/google/auth">
+            <button type="submit" class="google-btn">
+              <img src="/images/Google.png" alt="Google G" />
+              Continue with Google
+            </button>
+          </form>
+
+         <p class="login-link">
+            Do not have an account? <a href="/singup">Sign Up</a>
+          </p>
+      </div>
 
       <div class="feature-section">
-        <div class="feature-icon">🍔</div>
-        <h3>One account for all bites</h3>
-        <p>
-          No more managing separate accounts. You can use one account across all
-          SwiftBite partners.
-        </p>
+        <div class="carousel-container">
+          <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-item">
+              <div class="feature-icon">
+                <img
+                  src="/images/Male_africanamerican_chef.png"
+                  alt="Male africanamerican chef"
+                />
+              </div>
+              <h3>One account for all bites</h3>
+              <p>Manage all your SwiftBite partner accounts in one place.</p>
+            </div>
+
+            <div class="carousel-item">
+              <div class="feature-icon">
+                <img src="/images/secure.png" alt="Male africanamerican chef" />
+              </div>
+              <h3>Secure and Fast</h3>
+              <p>Experience one-tap access to modern payments.</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+        </div>
       </div>
     </div>
-    <script>
-      const emailInput = document.getElementById("email");
-      const passwordInput = document.getElementById("password");
-      const togglePassword = document.getElementById("togglePassword");
-      const tick = document.getElementById("tick");
-      const continueBtn = document.getElementById("continueBtn");
 
-      togglePassword.addEventListener("click", () => {
-        const type =
-          passwordInput.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        passwordInput.setAttribute("type", type);
-
-        togglePassword.textContent = type === "password" ? "Show" : "Hide";
-      });
-
-      const validateEmail = (email) => {
-        return String(email)
-          .toLowerCase()
-          .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-          );
-      };
-
-      const updateUI = () => {
-        const isEmailValid = validateEmail(emailInput.value);
-        const hasPassword = passwordInput.value.length >= 1;
-
-        tick.style.display = isEmailValid ? "block" : "none";
-
-        if (isEmailValid && hasPassword) {
-          continueBtn.disabled = false;
-          continueBtn.classList.add("active");
-        } else {
-          continueBtn.disabled = true;
-          continueBtn.classList.remove("active");
-        }
-      };
-
-      emailInput.addEventListener("input", updateUI);
-      passwordInput.addEventListener("input", updateUI);
-    </script>
+    <script src="/secipts/script.js"></script>
   </body>
 </html>

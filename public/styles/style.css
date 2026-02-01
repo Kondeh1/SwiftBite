@@ -1,7 +1,8 @@
 :root {
-  --sb-blue: #1a4da1;
   --sb-orange: #ff6600;
+  --sb-blue: #ff6600;
   --light-bg: #f8fafc;
+  --input-bg: #ebf2ff;
   --border: #e2e8f0;
   --success: #22c55e;
   --text: #0f172a;
@@ -18,40 +19,47 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f1f5f9;
+  background-color: #e2e8f0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("/images/Woman with food.jpg");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
 }
 
 .container {
   display: flex;
   width: 880px;
-  height: 540px;
+  height: 550px;
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
 }
 
 .login-section {
   flex: 1.1;
-  padding: 50px 60px;
+  padding: 30px 50px;
   display: flex;
   flex-direction: column;
 }
 
 .logo {
-  width: 160px;
-  margin-bottom: 40px;
-  object-fit: contain;
   align-self: center;
-  background-color: #ff6600;
-  border-radius: 24px;
+  background-color: var(--sb-orange);
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100px;
+  display: block;
 }
 
 h2 {
-  margin: 0 0 28px 0;
-  font-size: 26px;
+  margin: 0 0 20px 0;
+  font-size: 22px;
   color: var(--text);
   font-weight: 700;
+  text-align: center;
 }
 
 .input-group {
@@ -61,62 +69,41 @@ h2 {
 
 label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   color: #64748b;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-}
-
-input[type="email"] {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 16px;
-  box-sizing: border-box;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-input[type="email"]:focus {
-  border-color: var(--sb-blue);
-  box-shadow: 0 0 0 3px rgba(26, 77, 161, 0.1);
-}
-
-.valid-tick {
-  position: absolute;
-  right: 16px;
-  top: 42px;
-  color: var(--success);
-  display: none;
-  font-size: 18px;
-}
-
-.switch-link {
-  color: var(--sb-blue);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 32px;
-  display: inline-block;
 }
 
 .input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
 }
 
-.input-wrapper input {
+input,
+.role-select {
   width: 100%;
-  padding: 14px 16px;
-  padding-right: 60px; /* Space for the button/tick */
+  padding: 11px 14px;
   border: 1px solid var(--border);
+  background-color: var(--input-bg);
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   outline: none;
-  transition: all 0.2s ease;
+  transition: border 0.2s;
+}
+
+input:focus,
+.role-select:focus {
+  border: 1px solid var(--sb-orange);
+}
+
+.valid-tick {
+  position: absolute;
+  right: 12px;
+  color: var(--success);
+  display: none;
+  font-size: 16px;
 }
 
 .view-toggle-btn {
@@ -125,40 +112,65 @@ input[type="email"]:focus {
   background: none;
   border: none;
   color: var(--sb-blue);
-  font-size: 13px;
-  font-weight: 600;
   cursor: pointer;
-  text-transform: uppercase;
-  user-select: none;
 }
 
-.view-toggle-btn:hover {
-  color: var(--sb-orange);
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  color: #94a3b8;
+  font-size: 12px;
 }
 
-.valid-tick {
-  position: absolute;
-  right: 16px;
-  color: var(--success);
-  display: none;
-  font-weight: bold;
-  font-size: 18px;
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+.google-btn {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.google-btn:hover {
+  background: #ff6600;
+  color: white;
+  font-weight: 700;
+}
+
+.google-btn img {
+  width: 18px;
 }
 
 .remember-me {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  font-size: 15px;
+  margin: 15px 0;
+  font-size: 13px;
   color: #475569;
 }
 
 .switch {
   position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: 38px;
+  height: 20px;
 }
 
 .switch input {
@@ -182,43 +194,40 @@ input[type="email"]:focus {
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 14px;
+  width: 14px;
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: 0.3s;
   border-radius: 50%;
+  transition: 0.3s;
 }
 
 input:checked + .slider {
-  background-color: var(--sb-blue);
+  background-color: var(--sb-orange);
 }
+
 input:checked + .slider:before {
-  transform: translateX(20px);
+  transform: translateX(18px);
 }
 
 .continue-btn {
   width: 100%;
-  padding: 16px;
+  padding: 13px;
   background-color: #e2e8f0;
   color: #94a3b8;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
   font-weight: 600;
   cursor: not-allowed;
-  transition: all 0.3s ease;
+  transition: 0.3s;
+  margin-top: 15px;
 }
 
 .continue-btn.active {
-  background-color: var(--sb-orange);
-  color: white;
+  background-color: #ff6600 !important;
+  color: white !important;
   cursor: pointer;
-}
-
-.continue-btn.active:hover {
-  filter: brightness(1.1);
 }
 
 .feature-section {
@@ -229,24 +238,109 @@ input:checked + .slider:before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 40px;
+  padding: 30px;
+  overflow: hidden;
 }
 
-.feature-icon {
-  font-size: 80px;
-  margin-bottom: 24px;
+.carousel-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 200%;
+}
+
+.carousel-item {
+  width: 49%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.feature-icon img {
+  width: 300px;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .feature-section h3 {
-  margin: 0 0 12px 0;
+  margin-bottom: 10px;
   color: var(--text);
-  font-size: 20px;
 }
 
 .feature-section p {
+  font-size: 14px;
   color: #64748b;
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 260px;
+  max-width: 240px;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #cbd5e1;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.dot.active {
+  background-color: var(--sb-orange);
+  transform: scale(1.2);
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+.login-link a {
+  color: var(--sb-orange);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#swift {
+  background-color: var(--sb-orange);
+  border-radius: 20px;
+}
+
+small {
+  display: flex;
+  margin-top: 30px;
+}
+
+.userExist {
+  background-color: #ff6600;
+  width: 300px;
+  height: 50px;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  margin-top: 5px;
+  border-radius: 24px;
+  transition: opacity 0.5s ease;
+}
+
+.userExist p {
+  text-align: center;
+  margin: 0;
+  padding: 7px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
 }

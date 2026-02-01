@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/styles/style.css" />
+    <title>SwiftBite Signup</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="login-section">
+        <h2>Create your account</h2>
+        <form action="/register" method="post">
+          <div class="input-group">
+            <label>Full Name:</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                name="fullname"
+                id="name"
+                placeholder="eg.Moriba John"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Email:</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="eg. msk@gmail.com"
+              />
+              <span id="tick" class="valid-tick">✓</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>I am a...:</label>
+            <div class="input-wrapper">
+              <select id="role" name="role" class="role-select">
+                <option value="" disabled selected>Select your role</option>
+                <option value="customer">Customer (I want to eat)</option>
+                <option value="manager">Manager (I want to sell)</option>
+                <!-- <option value="driver">Driver (I want to deliver)</option> -->
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Password:</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="•••••"
+              />
+              <button type="button" id="togglePassword" class="view-toggle-btn">
+                <i class="fa-solid fa-eye-slash"></i>
+              </button>
+            </div>
+          </div>
+
+          <button id="continueBtn" type="submit" class="continue-btn" disabled>
+            Create Account
+          </button>
+        </form>
+        <div class="divider"><span>or</span></div>
+
+        <form action="/google/auth">
+          <button type="submit" class="google-btn">
+            <img src="/images/Google.png" alt="Google G" />
+            Continue with Google
+          </button>
+        </form>
+
+        <p class="login-link">
+          Already have an account? <a href="/login">Log in</a>
+        </p>
+      </div>
+
+      <div class="feature-section">
+        <div class="carousel-container">
+          <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-item">
+              <div class="feature-icon">
+                <img
+                  id="swift"
+                  src="/images/Final SwiftBite Logo.png"
+                  alt="Male africanamerican chef"
+                />
+              </div>
+              <h3>Join the SwiftBite Family</h3>
+              <p>
+                Whether you're eating, cooking, or driving, we've got a place
+                for you.
+              </p>
+              <small>SwiftBite &copy; <%= new Date().getFullYear() %> </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/secipts/script.js"></script>
+  </body>
+</html>
