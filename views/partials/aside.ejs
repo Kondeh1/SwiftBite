@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <nav>
+        <ul>
+          <li class="<%= currentPage === 'dashboard' ? 'active' : '' %>">
+            <a href="/admin/dashboard">
+              <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+          </li>
+          <li class="<%= currentPage === 'verification' ? 'active' : '' %>">
+            <a href="/admin/verification">
+              <i class="fa-solid fa-shop"></i> Verification Queue
+            </a>
+          </li>
+          <li class="<%= currentPage === 'accounts' ? 'active' : '' %>">
+            <a href="/admin/accounts">
+              <i class="fa-solid fa-users"></i> Account Management
+            </a>
+          </li>
+          <li class="<%= currentPage === 'monitoring' ? 'active' : '' %>">
+            <a href="/admin/monitoring">
+              <i class="fa-solid fa-desktop"></i> System Monitoring
+            </a>
+          </li>
+          <li class="<%= currentPage === 'settings' ? 'active' : '' %>">
+            <a href="/admin/settings">
+              <i class="fa-solid fa-gear"></i> Settings
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <footer><%- include("../partials/footer.ejs") %></footer>
+        <a href="/logout" class="logout-btn">
+          Log Out <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+    </aside>
+  </body>
+</html>

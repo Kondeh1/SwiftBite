@@ -1,6 +1,26 @@
-<h1>Welcome,</h1>
-<p>Please select your role to continue:</p>
-<form action="/set-role" method="POST">
-    <button name="role" value="customer" type="submit">I am a Customer</button>
-    <!-- <button name="role" value="staff" type="submit">I am Staff</button> -->
-</form>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Your Role - SwiftBite</title>
+    <link rel="stylesheet" href="/styles/style.css" />
+  </head>
+  <body>
+    <div class="role-page">
+      <% if(locals.name){ %>
+      <h1>Welcome, <%= name %></h1>
+      <% } else {%>
+      <h1>Welcome</h1>
+      <% } %>
+      <p>Please select your role to continue:</p>
+      <form action="/set-role" method="POST">
+        <select name="role">
+          <option value="Customer" selected>Customer</option>
+          <option value="Manager">Manager</option>
+        </select>
+        <button type="submit" class="btnc">Confirm</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
+    <title>SwiftBite || Admin Page</title>
+  </head>
+  <body>
+    <%- include("../partials/header.ejs") %>
+    <div class="dashboard-container">
+      <%- include("../partials/aside.ejs") %>
+
+      <main class="main-content">
+        <div class="stats-grid">
+          <div class="card orange">
+            <div class="card-info">
+              <p>Total Restaurants</p>
+              <h2 id="total-restaurants"><%= stats.restaurants %></h2>
+              <span class="trend">FIXME +3 this month</span>
+            </div>
+            <i class="fa-solid fa-mug-hot"></i>
+          </div>
+
+          <div class="card blue">
+            <div class="card-info">
+              <p>Total Users</p>
+              <h2 id="total-users"><%= stats.users %></h2>
+              <span class="trend">
+                Last: <span class="live-time" id="last-user-time">Just now</span>
+              </span>
+            </div>
+            <i class="fa-solid fa-users"></i>
+          </div>
+
+          <div class="card orange">
+            <div class="card-info">
+              <p>Total Orders</p>
+              <h2><%= stats.orders %></h2>
+              <span class="trend">FIXME +3 this week</span>
+            </div>
+            <i class="fa-solid fa-laptop-code"></i>
+          </div>
+
+          <div class="card blue">
+            <div class="card-info">
+              <p>Current Orders</p>
+              <h2>2</h2>
+              <span class="trend">Just Now</span>
+            </div>
+            <i class="fa-solid fa-cart-shopping"></i>
+          </div>
+        </div>
+
+        <section class="recent-activity">
+          <h3>Recent Activity</h3>
+          <ul id="activity-list">
+            <% activities.forEach(act => { %>
+                <li><%= act.full_name %> registered as a <%= act.role %></li>
+            <% }) %>
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <button id="enable-audio" class="btn btn-primary">Enable Sound Notifications</button>
+
+<script>
+    const socket = io();
+    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    
+    // Unlocks the audio when the admin clicks the button
+    document.getElementById('enable-audio').addEventListener('click', function() {
+        notificationSound.play().then(() => {
+            notificationSound.pause(); // Play and pause immediately to "prime" it
+            notificationSound.currentTime = 0;
+            this.style.display = 'none'; // Hide button after it's enabled
+            console.log("Audio enabled");
+        });
+    });
+        timeago.render(document.querySelectorAll('.live-time'));
+
+        socket.on("update-user-count", (data) => {
+            console.log("Live update received:", data);
+
+            const userCountEl = document.getElementById('total-users');
+            if(userCountEl) userCountEl.innerText = data.total;
+
+            const timeEl = document.getElementById('last-user-time');
+            if(timeEl) {
+                timeEl.setAttribute('datetime', new Date().toISOString());
+                timeago.render(document.querySelectorAll('.live-time'));
+            }
+
+            const activityList = document.getElementById('activity-list');
+            const newEntry = document.createElement('li');
+            newEntry.innerHTML = `<strong>${data.name}</strong> just registered!`;
+            newEntry.style.color = "#2b8a3e"; 
+            activityList.prepend(newEntry);
+
+            notificationSound.play().catch(e => console.log("Audio waiting for user interaction"));
+        });
+    </script>
+  </body>
+</html>

@@ -28,6 +28,10 @@ body {
   overflow: hidden;
 }
 
+footer {
+  text-align: center;
+}
+
 .container {
   display: flex;
   width: 880px;
@@ -36,6 +40,15 @@ body {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.another {
+  display: flex;
+  justify-content: space-between;
+}
+
+.another a {
+  padding-left: 10px;
 }
 
 .login-section {
@@ -343,4 +356,124 @@ small {
 .hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+.role-page {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.role-page > form > select,
+.btnc {
+  padding: 14px 24px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.role-page > form > select > option {
+  background-color: #fff;
+  color: #0f172a;
+}
+
+.role-page {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-page form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+}
+
+.horizontal-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  justify-content: center;
+}
+
+.horizontal-form input {
+  flex: 2;
+  min-width: 200px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--input-bg);
+}
+
+.btnc {
+  flex: 1;
+  white-space: nowrap;
+  background-color: var(--sb-orange);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btnc:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.role-page p {
+  color: #475569;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.input-group {
+    width: 100%; 
+    margin-bottom: 15px;
+}
+
+.input-wrapper {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.view-toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--sb-orange); 
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
 }
