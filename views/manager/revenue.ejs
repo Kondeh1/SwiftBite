@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideManager.ejs") %>
+    <main class="main-content" style="background-color: #f8f9fa; padding: 40px;">
+        
+        <div style="display: flex; gap: 40px; align-items: flex-start;">
+            
+            <div style="flex: 1;">
+                <div class="page-header" style="margin-bottom: 30px;">
+                    <h2 style="font-size: 2.2rem; color: #1e293b;">Financial Overview</h2>
+                </div>
+
+                <div style="display: flex; grid-template-columns: 1fr; gap: 20px; margin-bottom: 30px;">
+                    <div style="background: #ff7e33; color: white; padding: 30px; border-radius: 25px; box-shadow: 0 4px 15px rgba(255, 126, 51, 0.3);">
+                        <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Total Balance</p>
+                        <h1 style="font-size: 3rem; margin: 10px 0;">NLe <%= totalBalance %></h1>
+                    </div>
+
+                    <div style="background: #ff7e33; color: white; padding: 30px; border-radius: 25px; box-shadow: 0 4px 15px rgba(255, 126, 51, 0.3);">
+                        <p style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Completed Orders</p>
+                        <h1 style="font-size: 3rem; margin: 10px 0;"><%= totalCompleted %></h1>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                   <% if (restaurantId) { %>
+    <button onclick="document.getElementById('withdrawModal').style.display='flex'" style="background: #ff4d00; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer;">Withdraw Funds</button>
+<% } else { %>
+    <p style="color: #ff4d00; font-weight: bold;">Please set up your restaurant in Settings to enable withdrawals.</p>
+<% } %>
+                    
+                    <button id="toggleTransactions" 
+                            style="background: #cbd5e1; color: #475569; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer;">
+                        Transactions <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="transactionSection" style="flex: 1.2; background: white; border-radius: 30px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: none;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: #1e293b; margin: 0;">Recent Transactions</h3>
+        <div style="position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+            <input type="text" id="phoneSearch" onkeyup="filterByPhone()" placeholder="Search by phone..." 
+                   style="padding: 8px 12px 8px 35px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.85rem; width: 200px;">
+        </div>
+    </div>
+
+    <table id="transactionTable" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; color: #94a3b8; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem;">
+                <th style="padding-bottom: 15px;">DATE</th>
+                <th style="padding-bottom: 15px;">PHONE NUMBER</th>
+                <th style="padding-bottom: 15px;">AMOUNT</th>
+                <th style="padding-bottom: 15px; text-align: right;">STATUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% history.forEach(item => { %>
+                <tr class="transaction-row" style="border-bottom: 1px solid #f8fafc;">
+                    <td style="padding: 15px 0; font-size: 0.9rem;"><%= new Date(item.created_at).toLocaleDateString('en-GB') %></td>
+                    
+                    <td class="phone-cell" style="padding: 15px 0; color: #64748b; font-family: monospace;"><%= item.phone || 'N/A' %></td>
+                    
+                    <td style="padding: 15px 0;"><strong>NLe <%= item.amount %></strong></td>
+                    
+                    <td style="padding: 15px 0; text-align: right;">
+                        <span style="background: #fff9e6; color: #d97706; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold;">
+                            <%= item.status.toUpperCase() %>
+                        </span>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <button onclick="exportToPDF()" 
+        style="background: #475569; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+    Export PDF <i class="fa-solid fa-file-pdf"></i>
+</button>
+</div>
+        </div>
+        <div id="withdrawModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px);">
+    <div style="background: white; border-radius: 25px; width: 450px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+        
+        <div style="padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9;">
+            <h3 style="margin: 0; font-size: 1.1rem; color: #1e293b; font-weight: 700;">Secure Withdrawal</h3>
+            <button onclick="document.getElementById('withdrawModal').style.display='none'" style="background: none; border: none; font-size: 1.5rem; color: #94a3b8; cursor: pointer;">&times;</button>
+        </div>
+
+        <div style="padding: 30px;">
+            <div style="background: #f8fafc; border-radius: 15px; padding: 20px; text-align: center; border: 1px dashed #e2e8f0; margin-bottom: 25px;">
+    <p style="margin: 0; font-size: 0.8rem; color: #64748b; font-weight: 600;">Available Balance</p>
+    <h1 style="margin: 5px 0 0 0; color: #ff4d00; font-size: 2.2rem;">NLe <%= totalBalance %></h1>
+</div>
+
+            <form action="/manager/withdraw" method="POST">
+                <input type="hidden" name="restaurantId" value="<%= restaurantId %>">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-bottom: 8px;">Enter Withdraw Phone Number:</label>
+                    <input type="text" name="phone" required pattern="^\+232[0-9]{8}$"
+                           style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fcfcfc;" 
+                           placeholder="Please use this format: +23276589691">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-bottom: 8px;">Amount to Withdraw (NLe)</label>
+                    <input type="number" name="amount" step="0.01" max="<%= totalBalance %>" required
+                           style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fcfcfc;" 
+                           placeholder="Enter amount">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-bottom: 8px;">Payment Method</label>
+                    <select name="method" required style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer;">
+                        <option value="orange_money">Orange Money</option>
+                        <option value="africell_money">Africell Money</option>
+                    </select>
+                </div>
+
+                <button type="submit" style="width: 100%; background: #ff4d00; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+                    Confirm & Transfer
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+    </main>
+</div>
+
+<script>
+    const transBtn = document.getElementById('toggleTransactions');
+    const transSection = document.getElementById('transactionSection');
+
+    transBtn.addEventListener('click', () => {
+        const isHidden = transSection.style.display === 'none';
+        transSection.style.display = isHidden ? 'block' : 'none';
+        transBtn.style.background = isHidden ? '#ff4d00' : '#cbd5e1';
+        transBtn.style.color = isHidden ? 'white' : '#475569';
+    });
+
+function filterByPhone() {
+    const input = document.getElementById("phoneSearch");
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll(".transaction-row");
+
+    rows.forEach(row => {
+        const phoneCell = row.querySelector(".phone-cell");
+        if (phoneCell) {
+            const textValue = phoneCell.textContent || phoneCell.innerText;
+            if (textValue.toLowerCase().indexOf(filter) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        }
+    });
+}
+
+async function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Withdrawal History Report", 14, 20);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+
+    const rows = [];
+    const tableRows = document.querySelectorAll(".transaction-row");
+    
+    tableRows.forEach(row => {
+        const date = row.cells[0].innerText;
+        const phone = row.cells[1].innerText;
+        const amount = row.cells[2].innerText;
+        const status = row.cells[3].innerText;
+        rows.push([date, phone, amount, status]);
+    });
+
+    doc.autoTable({
+        startY: 40,
+        head: [['Date', 'Phone Number', 'Amount', 'Status']],
+        body: rows,
+        headStyles: { fillColor: [255, 126, 51] },
+        alternateRowStyles: { fillColor: [248, 250, 252] }
+    });
+
+    doc.save("Withdrawal_History.pdf");
+}
+</script>
+</body>
+</html>

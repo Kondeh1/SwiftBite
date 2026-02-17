@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= restaurant.name %> Menu || SwiftBite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        .food-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+        .add-to-cart-btn { transition: all 0.3s ease; }
+        .add-to-cart-btn:active { transform: scale(0.98); }
+        
+        /* The Green Feedback Class */
+        .btn-success-feedback {
+            background-color: #28a745 !important; /* Green */
+            color: white !important;
+            transform: scale(1.02);
+        }
+
+        #cart-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<%- include("../partials/cHeader.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideCustomer.ejs") %>
+
+    <main class="main-content" style="background: #f8f9fa; padding: 40px">
+        
+        <div class="menu-banner" style="background: white; border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #eee;">
+            <img src="<%= restaurant.image_url %>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ff4f18;">
+            <div>
+                <h2 style="margin: 0; color: #1e293b;"><%= restaurant.name %></h2>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.9rem;"><i class="fa-solid fa-location-dot"></i> <%= restaurant.address %></p>
+            </div>
+        </div>
+
+        <div class="filter-bar" style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 250px; position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                <input type="text" id="foodSearch" placeholder="Search for food..." 
+                       style="width: 100%; padding: 12px 15px 12px 45px; border-radius: 12px; border: 1px solid #ddd; outline: none; font-size: 1rem;">
+            </div>
+
+            <div style="width: 200px;">
+                <select id="categoryFilter" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; font-size: 1rem; cursor: pointer;">
+                    <option value="all">All Categories</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="menu-grid" id="menuGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+            <% if (menu && menu.length > 0) { %>
+                <% menu.forEach(item => { %>
+                    <div class="food-card" 
+                         data-id="<%= item.id %>"
+                         data-price="<%= item.price %>"
+                         data-category="<%= (item.category) ? item.category.toLowerCase() : 'none' %>" 
+                         data-name="<%= (item.name) ? item.name.toLowerCase() : '' %>"
+                         style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #eee; text-align: center; transition: 0.3s;">  
+                        
+                        <div class="food-img" style="height: 200px; width: 100%;">
+                            <img src="<%= item.image_url || '/images/default-food.jpg' %>" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+
+                        <div class="food-info" style="padding: 20px;">
+                            <h3 style="margin: 0 0 10px 0; color: #000; font-size: 1.5rem; font-weight: 700;"><%= item.name %></h3>
+                            <div class="price-tag" style="color: #e31e24; font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;">
+                                Le <%= item.price %>
+                            </div>
+                            <button class="add-to-cart-btn" style="width: 100%; background: #ff7f32; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.3rem; font-weight: 600; cursor: pointer;">
+                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="fa-solid fa-utensils" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                    <p>No menu items found for this restaurant.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+</div>
+
+<script>
+    // 1. Live Filter Logic
+    const foodSearch = document.getElementById('foodSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const foodCards = document.querySelectorAll('.food-card');
+
+    function filterMenu() {
+        const searchText = foodSearch.value.toLowerCase().trim();
+        const selectedCategory = categoryFilter.value;
+
+        foodCards.forEach(card => {
+            const itemName = card.getAttribute('data-name') || "";
+            const itemCategory = card.getAttribute('data-category') || "none";
+            const matchesSearch = itemName.includes(searchText);
+            const matchesCategory = (selectedCategory === 'all' || itemCategory === selectedCategory);
+            card.style.display = (matchesSearch && matchesCategory) ? 'block' : 'none';
+        });
+    }
+
+    foodSearch.addEventListener('input', filterMenu);
+    categoryFilter.addEventListener('change', filterMenu);
+
+    // 2. Add to Cart Logic
+   // 2. Add to Cart Logic
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', async (e) => {
+        // Prevent default form behavior if any
+        e.preventDefault();
+
+        const card = button.closest('.food-card');
+        const itemData = {
+            id: card.getAttribute('data-id'),
+            name: card.querySelector('h3').innerText,
+            price: card.getAttribute('data-price'),
+            image: card.querySelector('img').src,
+restaurant_id: '<%= restaurant.id %>'        };
+
+        try {
+            const response = await fetch('/customer/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(itemData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Update Badge
+                const badge = document.getElementById('cart-badge');
+                if (badge) {
+                    badge.innerText = data.cartCount;
+                    badge.style.display = 'flex'; 
+                } else {
+                  window.location.reload();
+
+                } 
+
+                // VISUAL FEEDBACK FIX:
+                const originalContent = button.innerHTML;
+                const originalBg = button.style.background; // Store the orange color
+
+                // Apply Green
+                button.style.background = '#28a745'; 
+                button.innerHTML = '<i class="fa-solid fa-check"></i> Added';
+                button.disabled = true; 
+
+                // Revert after 1.5 seconds
+                setTimeout(() => {
+                    button.style.background = originalBg; // Put orange back
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                }, 1500);
+            }
+        } catch (err) {
+            console.error("Cart error:", err);
+        }
+    });
+});
+</script>
+</body>
+</html>

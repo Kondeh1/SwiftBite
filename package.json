@@ -33,6 +33,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.17.2",
     "socket.io": "^4.8.3",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "uuid": "^13.0.0"
   }
 }

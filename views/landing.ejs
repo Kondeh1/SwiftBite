@@ -1,1 +1,706 @@
-<a  href="/getstarted" role="button">Get Started</a> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftBite - Local Food Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/landing.css">
+</head>
+<body>
+    
+ 
+<header>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo-container">
+          
+                <img src="/images/Final SwiftBite Logo.png" alt="SwiftBite Logo" class="logo-image">
+                <div class="logo-text-container">
+                    <a href="#" class="logo">Swift<span>Bite</span></a>
+                    <span class="logo-tagline">Fast.Fresh.Flavor.</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#food">Food</a></li>
+                <li><a href="#support">Customer Support</a></li>
+            </ul>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </div>
+</header>
+
+   
+    <section class="hero" id="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                <div class="container">
+                    <h1>Craving local? Just tap.</h1>
+                    <p class="tagline">The future of food has no boundaries.</p>
+                    <p>Experience top tier local dining, delivered anywhere you call home.</p>
+                    <a href="/login" role="button" class="cta-button">Get Started</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                <div class="container">
+                    <h1>Authentic Sierra Leonean Cuisine</h1>
+                    <p class="tagline">Taste the flavors of Freetown.</p>
+                    <p>From grilled chicken to cassava leaves, experience the real taste of home.</p>
+                    <a href="#" class="cta-button">Order Now</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                <div class="container">
+                    <h1>Fast. Fresh. Flavor.</h1>
+                    <p class="tagline">Delivered to your door.</p>
+                    <p>Join thousands of satisfied customers enjoying local favorites daily.</p>
+                    <a href="/login" role="button" class="cta-button">Get Started</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1604909052743-94e838986d24?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');">
+                <div class="container">
+                    <h1>Support Local Businesses</h1>
+                    <p class="tagline">Every order helps our community.</p>
+                    <p>We partner with the best local restaurants in Mile 91 and beyond.</p>
+                    <a href="#" class="cta-button">Explore Partners</a>
+                </div>
+            </div>
+        </div>
+        
+     
+        <div class="hero-slider-controls">
+            <button class="hero-slider-prev"><i class="fas fa-chevron-left"></i></button>
+            <div class="hero-slider-dots">
+                <span class="hero-dot active" data-slide="0"></span>
+                <span class="hero-dot" data-slide="1"></span>
+                <span class="hero-dot" data-slide="2"></span>
+                <span class="hero-dot" data-slide="3"></span>
+            </div>
+            <button class="hero-slider-next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+       
+        <div class="hero-slide-counter">
+            <span class="current-slide">1</span> of <span class="total-slides">4</span>
+        </div>
+    </section>
+
+    <section class="restaurant-marquee">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                <div class="marquee-text">
+                    <span class="marquee-message">Hungry for authentic local flavors? Choose from our handpicked partners who pour love into every dish: </span>
+                    <span class="restaurant-highlight oyesis">savor the bold creations of <strong>Oyesis</strong></span>
+                    <span class="marquee-separator"> • </span>
+                    <span class="restaurant-highlight is-fast-food">experience the quick perfection of <strong>IS Fast Food</strong></span>
+                    <span class="marquee-separator"> • </span>
+                    <span class="restaurant-highlight yff">or dive into the beloved classics of <strong>Yoni Fast Food (YFF)</strong></span>
+                    <span class="marquee-message">. Your taste adventure begins here!</span>
+                </div>
+                <div class="marquee-text" aria-hidden="true">
+                    <span class="marquee-message">Hungry for authentic local flavors? Choose from our handpicked partners who pour love into every dish: </span>
+                    <span class="restaurant-highlight oyesis">savor the bold creations of <strong>Oyesis</strong></span>
+                    <span class="marquee-separator"> • </span>
+                    <span class="restaurant-highlight is-fast-food">experience the quick perfection of <strong>IS Fast Food</strong></span>
+                    <span class="marquee-separator"> • </span>
+                    <span class="restaurant-highlight yff">or dive into the beloved classics of <strong>Yoni Fast Food (YFF)</strong></span>
+                    <span class="marquee-message">. Your taste adventure begins here!</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Beyond the Menu. Into the Heart of Local Eats.</h2>
+                <p>Built with the features you actually need for the perfect food delivery experience.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Curated Local Selection</h3>
+                    <p>Discover the best local restaurants and hidden gems in mile 91, carefully selected for quality.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast & Reliable</h3>
+                    <p>Quick delivery times with reliable service you can count on, every single time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Customer Support</h3>
+                    <p>Our dedicated support team is available round the clock to assist with any inquiries or issues.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="process" id="process">
+        <div class="container">
+            <div class="section-title">
+                <h2>Easy steps to get your favorite local food</h2>
+                <p>Delivered right to your door in no time</p>
+            </div>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Browse & Discover</h3>
+                    <p>Explore local restaurants and find your perfect meal from our curated selection.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Order & Track</h3>
+                    <p>Place your order and track it in real-time until delivery. Know exactly when your food will arrive.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Enjoy & Rate</h3>
+                    <p>Savor delicious local food and share your experience to help others discover great eats.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="food-culture" id="food">
+        <div class="container">
+            <div class="culture-content">
+                <div class="culture-text">
+                    <h2>It's Not Just Food, It's Culture.</h2>
+                    <p>We partner with the best local restaurants to bring you authentic flavors. From 1/2 Chicken & Chips to savory meat pies, explore tastes that tell the story of Freetown.</p>
+                    
+                    <div class="culture-features">
+                        <div class="culture-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Fresh, local ingredients</span>
+                        </div>
+                        <div class="culture-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Authentic recipes</span>
+                        </div>
+                        <div class="culture-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Quality guaranteed</span>
+                        </div>
+                        <div class="culture-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Supporting local business</span>
+                        </div>
+                    </div>
+                    
+                    <a href="/login" role="button" class="cta-button">Click to explore culture</a>
+                </div>
+                
+                <div class="culture-image-slider">
+                   
+                    <div class="food-slider-container">
+                        <div class="food-slider">
+                            <div class="food-slide active">
+                                <div class="food-item">
+                                    <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Crispy Fried Chicken">
+                                    <div class="food-info">
+                                        <h4>Crispy Fried Chicken</h4>
+                                        <p>Golden, perfectly seasoned fried chicken - a beloved local favorite</p>
+                                    </div>
+                                    <div class="rating">4.8 ★</div>
+                                </div>
+                            </div>
+                            <div class="food-slide">
+                                <div class="food-item">
+                                    <img src="https://images.unsplash.com/photo-1604909052743-94e838986d24?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Jollof Rice">
+                                    <div class="food-info">
+                                        <h4>Jollof Rice</h4>
+                                        <p>Rich, flavorful West African rice dish with tomatoes, onions, and spices</p>
+                                    </div>
+                                    <div class="rating">4.9 ★</div>
+                                </div>
+                            </div>
+                            <div class="food-slide">
+                                <div class="food-item">
+                                    <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Grilled Fish">
+                                    <div class="food-info">
+                                        <h4>Grilled Barracuda</h4>
+                                        <p>Fresh catch from local waters, grilled to perfection with traditional spices</p>
+                                    </div>
+                                    <div class="rating">4.7 ★</div>
+                                </div>
+                            </div>
+                            <div class="food-slide">
+                                <div class="food-item">
+                                    <img src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cassava Leaves">
+                                    <div class="food-info">
+                                        <h4>Cassava Leaves</h4>
+                                        <p>Creamy, nutty traditional Sierra Leonean dish cooked with palm oil</p>
+                                    </div>
+                                    <div class="rating">4.8 ★</div>
+                                </div>
+                            </div>
+                            <div class="food-slide">
+                                <div class="food-item">
+                                    <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Meat Pie">
+                                    <div class="food-info">
+                                        <h4>Savory Meat Pie</h4>
+                                        <p>Flaky pastry filled with seasoned beef and vegetables - perfect snack</p>
+                                    </div>
+                                    <div class="rating">4.6 ★</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                   
+                    <div class="food-slider-controls">
+                        <button class="food-slider-prev"><i class="fas fa-chevron-left"></i></button>
+                        <div class="food-slider-dots">
+                            <span class="food-dot active" data-slide="0"></span>
+                            <span class="food-dot" data-slide="1"></span>
+                            <span class="food-dot" data-slide="2"></span>
+                            <span class="food-dot" data-slide="3"></span>
+                            <span class="food-dot" data-slide="4"></span>
+                        </div>
+                        <button class="food-slider-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    
+                   
+                    <div class="food-slide-counter">
+                        <span class="current-food-slide">1</span> of <span class="total-food-slides">5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="order-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>See How Easy It Works</h2>
+                <p>Here's an example of a recent order placed through SwiftBite</p>
+            </div>
+            
+            <div class="order-container">
+                <div class="order-details">
+                    <h3 class="restaurant-name">Big Bite Snacks</h3>
+                    <p class="order-number">Order #148</p>
+                    
+                    <div class="customer-info">
+                        <h4 class="info-title">Customer</h4>
+                        <div class="info-content">
+                            <p><strong>Messie senseise</strong></p>
+                            <p>FQPB+J87, Freetown, Sierra Leone AT DSTI</p>
+                            <p>+23234897058</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-info">
+                        <h4 class="info-title">Payment Method</h4>
+                        <div class="info-content">
+                            <p>Cash on Delivery</p>
+                        </div>
+                    </div>
+                    
+                    <div class="additional-notes">
+                        <h4 class="info-title">Additional notes</h4>
+                        <div class="info-content">
+                            <p>No additional notes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-details">
+                    <div class="order-items">
+                        <h4 class="info-title">Items</h4>
+                        
+                        <div class="item">
+                            <div class="item-name">Salad or Coleslaw</div>
+                            <div class="item-price">SLE 50.00</div>
+                        </div>
+                        <div class="item">
+                            <div>Qty: 1</div>
+                            <div class="item-price">SLE 50.00</div>
+                        </div>
+                        
+                        <div class="item total-item">
+                            <div class="total-label">Total</div>
+                            <div class="total-price">SLE 100.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section class="testimonials" id="support">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Users Say</h2>
+                <p>Don't just take our word for it. Here's what real users think about SwiftBite.</p>
+            </div>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Top-tier service and great prices. They respond fast and truly care about their customers. Don't change a thing!"</p>
+                    <div class="testimonial-author">
+                        <div>
+                            <p class="author-name">Moriba Kondeh</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The best in the business. Better than the rest with amazing service and prices. Impressive!"</p>
+                    <div class="testimonial-author">
+                        <div>
+                            <p class="author-name">George Martin</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Incredible service and great prices. They are helpful, fast, and the best at what they do."</p>
+                    <div class="testimonial-author">
+                        <div>
+                            <p class="author-name">Roland Lansana</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-container">
+                <h2>Join the Movement.</h2>
+                <p>Experience the future of food right now. Click here to get started and put the best flavors in your hands today.</p>
+                <a href="/login" role="button" class="cta-button">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    
+    <div class="blue-bg-extension"></div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+               
+                <div class="footer-brand">
+                    <div class="footer-logo-container">
+                        <img src="/public/images/WhatsApp Image 2026-02-07 at 3.26.03 PM.jpeg" alt="SwiftBite Logo" class="logo-image">
+                        <div class="logo-text">
+                            <a href="#" class="logo">Swift<span>Bite</span></a>
+                            <span class="logo-tagline">Fast.Fresh.Flavor.</span>
+                        </div>
+                    </div>
+                    
+                    <p>Delivering authentic local flavors directly to your door.</p>
+                    
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-medium-m"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Press</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Partners</h4>
+                        <ul>
+                            <li><a href="#">Restaurants</a></li>
+                            <li><a href="#">Drivers</a></li>
+                            <li><a href="#">Investors</a></li>
+                            <li><a href="#">Suppliers</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+           
+            <div class="copyright">
+                <p>&copy; 2026 SwiftBite Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+  <script>
+   
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        const scrollPosition = window.scrollY;
+        
+       
+        if (scrollPosition > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+   
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                
+                const icon = this.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
+       
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+       
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroDots = document.querySelectorAll('.hero-dot');
+        const heroSlider = document.querySelector('.hero-slider');
+        const currentSlideSpan = document.querySelector('.current-slide');
+        const totalSlidesSpan = document.querySelector('.total-slides');
+        
+        let currentHeroSlide = 0;
+        let heroInterval;
+        const totalHeroSlides = heroSlides.length;
+        
+        if (totalSlidesSpan) {
+            totalSlidesSpan.textContent = totalHeroSlides;
+        }
+        
+        function showHeroSlide(index) {
+            
+            heroSlides.forEach(slide => slide.classList.remove('active'));
+            heroDots.forEach(dot => dot.classList.remove('active'));
+            
+           
+            heroSlides[index].classList.add('active');
+            heroDots[index].classList.add('active');
+            
+           
+            if (currentSlideSpan) {
+                currentSlideSpan.textContent = index + 1;
+            }
+            
+            currentHeroSlide = index;
+        }
+        
+        function nextHeroSlide() {
+            currentHeroSlide = (currentHeroSlide + 1) % totalHeroSlides;
+            showHeroSlide(currentHeroSlide);
+        }
+        
+        
+        heroDots.forEach((dot, index) => {
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation();
+             
+                clearInterval(heroInterval);
+               
+                showHeroSlide(index);
+                
+                heroInterval = setInterval(nextHeroSlide, 5000);
+            });
+        });
+        
+       
+        if (heroSlider) {
+            heroSlider.addEventListener('click', function(e) {
+                
+                if (e.target.classList.contains('hero-dot') || 
+                    e.target.closest('.hero-slider-dots') ||
+                    e.target.closest('.hero-slide-counter')) {
+                    return;
+                }
+                
+                
+                clearInterval(heroInterval);
+               
+                nextHeroSlide();
+                
+                heroInterval = setInterval(nextHeroSlide, 5000);
+            });
+        }
+        
+        
+        heroInterval = setInterval(nextHeroSlide, 5000);
+        
+
+        const foodSlides = document.querySelectorAll('.food-slide');
+        const foodDots = document.querySelectorAll('.food-dot');
+        const foodSliderContainer = document.querySelector('.food-slider-container');
+        const currentFoodSlideSpan = document.querySelector('.current-food-slide');
+        const totalFoodSlidesSpan = document.querySelector('.total-food-slides');
+        
+        let currentFoodSlide = 0;
+        let foodInterval;
+        const totalFoodSlides = foodSlides.length;
+        
+        if (totalFoodSlidesSpan) {
+            totalFoodSlidesSpan.textContent = totalFoodSlides;
+        }
+        
+        function showFoodSlide(index) {
+           
+            foodSlides.forEach(slide => slide.classList.remove('active'));
+            foodDots.forEach(dot => dot.classList.remove('active'));
+            
+           
+            foodSlides[index].classList.add('active');
+            foodDots[index].classList.add('active');
+            
+            
+            if (currentFoodSlideSpan) {
+                currentFoodSlideSpan.textContent = index + 1;
+            }
+            
+          
+            currentFoodSlide = index;
+        }
+        
+        function nextFoodSlide() {
+            currentFoodSlide = (currentFoodSlide + 1) % totalFoodSlides;
+            showFoodSlide(currentFoodSlide);
+        }
+        
+       
+        foodDots.forEach((dot, index) => {
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation();
+              
+                clearInterval(foodInterval);
+              
+                showFoodSlide(index);
+             
+                foodInterval = setInterval(nextFoodSlide, 4000);
+            });
+        });
+        
+       
+        if (foodSliderContainer) {
+            foodSliderContainer.addEventListener('click', function(e) {
+               
+                if (e.target.classList.contains('food-dot') || 
+                    e.target.closest('.food-slider-dots') ||
+                    e.target.closest('.food-slide-counter') ||
+                    e.target.closest('.rating') ||
+                    e.target.tagName === 'H4' ||
+                    e.target.tagName === 'P') {
+                    return;
+                }
+                
+               
+                clearInterval(foodInterval);
+               
+                nextFoodSlide();
+              
+                foodInterval = setInterval(nextFoodSlide, 4000);
+            });
+        }
+        
+       
+        foodInterval = setInterval(nextFoodSlide, 4000);
+        
+     
+        const heroSection = document.querySelector('.hero-slider');
+        if (heroSection) {
+            heroSection.addEventListener('mouseenter', function() {
+                clearInterval(heroInterval);
+            });
+            
+            heroSection.addEventListener('mouseleave', function() {
+                heroInterval = setInterval(nextHeroSlide, 5000);
+            });
+        }
+        
+        
+        if (foodSliderContainer) {
+            foodSliderContainer.addEventListener('mouseenter', function() {
+                clearInterval(foodInterval);
+            });
+            
+            foodSliderContainer.addEventListener('mouseleave', function() {
+                foodInterval = setInterval(nextFoodSlide, 4000);
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideManager.ejs") %>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Restaurant Application</h2>
+            <p>Register your business to start selling on SwiftBite.</p>
+        </div>
+
+        <div class="form-card" style="max-width: 600px; margin: 0 auto;">
+            <form action="/manager/apply" method="POST">
+                <div class="input-group">
+                    <label>Restaurant Name</label>
+                    <input type="text" name="restaurantName" required placeholder="e.g. Mama's Kitchen">
+                </div>
+
+                <div class="input-group">
+                    <label>Business Address</label>
+                    <input type="text" name="address" required placeholder="Enter full street address">
+                </div>
+
+                <div class="input-group">
+                    <label>Contact Number</label>
+                    <input type="text" name="contact" required placeholder="+232...">
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 20px;">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

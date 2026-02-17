@@ -11,24 +11,114 @@ SELECT * FROM users
 
 INSERT INTO users(full_name, email, password_hash, role) VALUES('Moriba Sahr Kondeh', 'moriba@gmail.com', 'Moeiba', 'admin')
 
-SELECT  * FROM users
-DROP TABLE users
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    full_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash TEXT,
-    role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('admin', 'manager', 'customer')),
-    is_verified BOOLEAN DEFAULT false,
-    profile_img TEXT DEFAULT '/images/default-avatar.png',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.min.js"></script>
+    <title>SwiftBite || Admin Dashboard</title>
+</head>
+<body>
+    <div class="stats-grid">
+        <div class="card blue">
+            <div class="card-info">
+                <p>Total Users</p>
+                <h2 id="total-users"><%= stats.users %></h2>
+                <span class="trend">
+                    Last: <span class="live-time" id="last-user-time" datetime="<%= new Date().toISOString() %>">Just now</span>
+                </span>
+            </div>
+            <i class="fa-solid fa-users"></i>
+        </div>
+        </div>
+
+    <section class="recent-activity">
+        <h3>Recent Activity</h3>
+        <ul id="activity-list">
+            <% activities.forEach(act => { %>
+                <li><%= act.full_name %> registered as a <%= act.role %></li>
+            <% }) %>
+        </ul>
+    </section>
+
+   
+</body>
+</html>
+
+
+CREATE TABLE withdrawals (
+    id SERIAL PRIMARY KEY,
+    admin_id UUID REFERENCES users(id), -- Changed from INT to UUID
+    amount DECIMAL(12, 2) NOT NULL,
+    method VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
+-- Insert a few test withdrawals
+INSERT INTO withdrawals (amount, method, status, created_at)
+VALUES 
+(1500.00, 'bank', 'completed', NOW() - INTERVAL '2 days'),
+(450.50, 'orange_money', 'completed', NOW() - INTERVAL '5 days'),
+(2000.00, 'bank', 'pending', NOW() - INTERVAL '1 hour'),
+(120.00, 'africell_money', 'rejected', NOW() - INTERVAL '10 days');
+
+UPDATE withdrawals 
+SET admin_id = (SELECT id FROM users WHERE role = 'admin' LIMIT 1)
+WHERE admin_id IS NOT NULL;
+
+
+
+CREATE TABLE staff (
+    id SERIAL PRIMARY KEY,
+    restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password TEXT NOT NULL, 
+    role VARCHAR(50) DEFAULT 'staff',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE orders 
+ADD COLUMN IF NOT EXISTS items TEXT,
+ADD COLUMN IF NOT EXISTS order_type VARCHAR(50) DEFAULT 'Pickup';
+
+UPDATE orders SET restaurant_id = 22 WHERE restaurant_id IS NULL;
+
+UPDATE orders SET 
+    
+    order_type = 'Delivery', 
+    items = '1x Grilled Chicken, 1x Soda' 
+WHERE items IS NULL;
+
+
+ALTER TABLE withdrawals 
+ADD COLUMN IF NOT EXISTS restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE,
+ADD COLUMN IF NOT EXISTS description TEXT;
+
+ALTER TABLE withdrawals ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+
+
+ALTER TABLE restaurants 
+ADD CONSTRAINT unique_owner_id UNIQUE (owner_id);
+
 ALTER TABLE users 
-ADD COLUMN reset_token TEXT,
-ADD COLUMN reset_token_expires TIMESTAMP;
+ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255);
+
+DROP TABLE staff
+SELECT * FROM staff
+SELECT * FROM restaurants
+SELECT * FROM orders
+SELECT * FROM withdrawals
+SELECT * FROM users
+
+
+
+
+
+
+
+

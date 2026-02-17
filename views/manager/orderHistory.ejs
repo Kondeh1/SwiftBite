@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideManager.ejs") %>
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Order History (Completed)</h2>
+        </div>
+
+        <div class="table-card">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>ORDER ID</th>
+                        <th>ITEMS</th>
+                        <th>TOTAL</th>
+                        <th style="text-align: right; padding-right: 20px;">STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders.length > 0) { %>
+                        <% orders.forEach(order => { %>
+                            <tr>
+                                <td><%= new Date(order.created_at).toLocaleDateString() %></td>
+                                <td>#<%= order.id %></td>
+                                <td><%= order.items %></td>
+                                <td><strong>Le <%= order.total_price %></strong></td>
+                                <td style="text-align: right; padding-right: 20px;">
+                                    <span class="status-pill completed" style="background: #dcfce7; color: #15803d; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem;">
+                                        COMPLETED
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">No history found.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

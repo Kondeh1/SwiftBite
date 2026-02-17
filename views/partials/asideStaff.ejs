@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <!-- <div class="sidebar-header">
+        <h3 class="res-name">
+          <%= typeof restaurantName !== 'undefined' ? restaurantName :
+          'StaffPanel' %>
+        </h3>
+      </div> -->
+      <nav>
+        <ul>
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'dashboard') ? 'active' : '' %>"
+          >
+            <a href="/staff/dashboard" class="nav-link">
+              <i class="fa-solid fa-gauge-high"></i> <span>Live Dashboard</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'new-orders') ? 'active' : '' %>"
+          >
+            <a href="/staff/new-orders" class="nav-link">
+              <i class="fa-solid fa-bell"></i>
+              <span>Incoming Orders</span>
+              <span id="order-count-badge" class="badge">0</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'order-tracking') ? 'active' : '' %>"
+          >
+            <a href="/staff/tracking" class="nav-link">
+              <i class="fa-solid fa-fire-burner"></i>
+              <span>Kitchen & Prep</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'delivery') ? 'active' : '' %>"
+          >
+            <a href="/staff/delivery" class="nav-link">
+              <i class="fa-solid fa-truck-ramp-box"></i>
+              <span>Dispatch & Verify</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'history') ? 'active' : '' %>"
+          >
+            <a href="/staff/history" class="nav-link">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <span>Order History</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/logout" class="logout-btn">
+          <span>Log Out</span> <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+    </aside>
+
+    <script>
+      const socket = io();
+      let orderCount = 0;
+
+      socket.on("newOrder", (order) => {
+        const badge = document.getElementById("order-count-badge");
+
+        orderCount++;
+        badge.innerText = orderCount;
+
+        badge.style.display = "inline-block";
+        badge.classList.add("pulse-animation");
+
+        const alertSound = new Audio("/sounds/notification.mp3");
+        alertSound.play();
+      });
+
+      document
+        .querySelector('a[href="/staff/new-orders"]')
+        .addEventListener("click", () => {
+          const badge = document.getElementById("order-count-badge");
+          badge.classList.remove("pulse-animation");
+        });
+    </script>
+  </body>
+</html>

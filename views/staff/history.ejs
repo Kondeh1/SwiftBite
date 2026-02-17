@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift History | SwiftBite</title>
+    <link rel="stylesheet" href="/css/staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .filter-section { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .history-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        .history-table th { background: #f8fafc; padding: 15px; text-align: left; color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+        .history-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; color: #1e293b; }
+        .pdf-header { display: none; } /* Hidden on screen, shown in PDF */
+    </style>
+</head>
+<body style="background: #f1f5f9;">
+    <%- include("../partials/header.ejs") %>
+    
+    <div class="dashboard-container">
+        <%- include("../partials/asideStaff.ejs") %>
+
+        <main class="admin-main">
+            <div class="header" style="margin-bottom: 25px;">
+                <h1><i class="fa-solid fa-clock-rotate-left" style="color: #ff4f18;"></i> My Shift History</h1>
+                <p>View and download reports of completed orders.</p>
+            </div>
+
+            <div class="filter-section">
+                <form action="/staff/history" method="GET" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="date" name="date" value="<%= selectedDate %>" style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                    <button type="submit" style="background: #ff4f18; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer;">Filter</button>
+                    <% if(selectedDate) { %> <a href="/staff/history" style="color: #64748b; font-size: 0.8rem;">Clear</a> <% } %>
+                </form>
+                
+                <button onclick="downloadHistoryPDF()" style="background: #1e293b; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+
+            <div id="report-content">
+                <div class="pdf-header" id="pdf-branding" style="padding: 20px; border-bottom: 2px solid #ff4f18; margin-bottom: 20px;">
+                    <h1 style="color: #ff4f18; margin: 0;">SwiftBite Business Report</h1>
+                    <p style="color: #64748b;">Restaurant ID: <%= restaurantId %> | Date: <%= selectedDate || 'All Time' %></p>
+                </div>
+
+                <% 
+                    let totalRevenue = 0; 
+                    orders.forEach(o => totalRevenue += parseFloat(o.total_price));
+                %>
+
+                <div style="background: white; padding: 20px; border-radius: 12px 12px 0 0; border-bottom: 2px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 700; color: #64748b;">Orders Found: <%= orders.length %></span>
+                    <span style="font-size: 1.2rem; font-weight: 800; color: #16a34a;">Total: Le <%= totalRevenue.toLocaleString() %></span>
+                </div>
+
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>ID & Date</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Type</th>
+                            <th style="text-align: right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (orders.length > 0) { %>
+                            <% orders.forEach(order => { %>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 700;">#<%= order.id %></div>
+                                        <div style="font-size: 0.7rem; color: #94a3b8;"><%= new Date(order.created_at).toLocaleDateString() %></div>
+                                    </td>
+                                    <td><%= order.customer_name %></td>
+                                    <td style="font-size: 0.85rem; color: #475569;"><%= order.items %></td>
+                                    <td>
+                                        <span style="font-size: 0.7rem; font-weight: 700; color: <%= order.order_type === 'Delivery' ? '#2563eb' : '#16a34a' %>">
+                                            <%= order.order_type.toUpperCase() %>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right; font-weight: 700;">Le <%= order.total_price %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 50px; color: #94a3b8;">No completed orders found for this selection.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function downloadHistoryPDF() {
+            const element = document.getElementById('report-content');
+            const branding = document.getElementById('pdf-branding');
+            
+            branding.style.display = 'block';
+
+            const opt = {
+                margin:       0.5,
+                filename:     'SwiftBite_Report_<%= selectedDate || "AllTime" %>.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                branding.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

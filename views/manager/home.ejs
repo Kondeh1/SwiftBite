@@ -1,11 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SwiftBite || Manager Page</title>
-</head>
+    </head>
 <body>
-    <h1>Manager</h1>
+    <%- include("../partials/header.ejs") %>
+    
+    <div class="dashboard-container">
+        <%- include("../partials/asideManager.ejs") %>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Manager Dashboard</h2>
+                <p>Monitor your restaurant's real-time performance</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card orange">
+                    <div class="card-info">
+                        <p>Current Orders</p>
+                        <h2 id="current-orders">0</h2> <span class="trend">Live processing</span>
+                    </div>
+                    <i class="fa-solid fa-hand-holding"></i>
+                </div>
+
+                <div class="card blue">
+                    <div class="card-info">
+                        <p>Active Staff</p>
+                        <h2 id="staff-count">0</h2> <span class="trend">Operating system</span>
+                    </div>
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+
+                <div class="card orange">
+                    <div class="card-info">
+                        <p>Daily Sales</p>
+                        <h2 id="daily-sales">Le 100</h2>
+                        <span class="trend">Total for today</span>
+                    </div>
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+
+                <div class="card blue">
+                    <div class="card-info">
+                        <p>Total Orders</p>
+                        <h2 id="total-orders">4</h2>
+                        <span class="trend">Completed through system</span>
+                    </div>
+                    <i class="fa-solid fa-cart-check"></i>
+                </div>
+            </div>
+
+            <section class="recent-activity">
+                <h3>System Logs</h3>
+                <ul id="activity-list">
+                    <li><span class="log-time">Just now:</span> Manager dashboard initialized.</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on("newOrderReceived", (data) => {
+            const orderEl = document.getElementById("current-orders");
+            if (orderEl) {
+                let currentVal = parseInt(orderEl.innerText) || 0;
+                orderEl.innerText = currentVal + 1;
+            }
+            const list = document.getElementById("activity-list");
+            const entry = document.createElement("li");
+            entry.innerHTML = `<strong>New Order!</strong> order received at ${new Date().toLocaleTimeString()}`;
+            list.prepend(entry);
+        });
+    </script>
 </body>
 </html>

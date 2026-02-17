@@ -1,15 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SwiftBite || Accounts Page</title>
-  </head>
-  <body>
-    <%- include("../partials/header.ejs") %>
-    <div class="dashboard-container">
-      <%-include("../partials/aside.ejs") %>
-      <h1>Accounts</h1>
-    </div>
-  </body>
-</html>
+<%- include("../partials/header.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/aside.ejs") %>
+    
+    <main class="admin-main">
+        <div class="admin-header">
+            <div class="header-title">
+                <h2>User Management</h2>
+                <p>Monitor platform access, update roles, and manage account security.</p>
+            </div>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="userSearch" placeholder="Search by name, email, or role...">
+            </div>
+        </div>
+
+        <div class="table-card">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>User Details</th>
+                        <th>Access Level</th>
+                        <th>Account Status</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% allUsers.forEach(u => { %>
+                        <tr id="user-row-<%= u.id %>">
+                            <td>
+                                <div class="user-profile-info">
+                                    <div class="avatar-circle">
+                                        <%= u.full_name.charAt(0).toUpperCase() %> 
+                                    </div>
+                                    <div>
+                                        <span class="user-name text-capitalize"><%= u.full_name %></span>
+                                        <span class="user-email"><%= u.email %></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-tag"><%= u.role %></span></td>
+                            <td>
+                                <span id="status-<%= u.id %>" class="status-pill <%= u.status %>" onclick="toggleSuspend('<%= u.id %>')" style="cursor: pointer;">
+                                    <span class="dot"></span> <%= u.status %>
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <div >
+                                    
+                                    <button onclick="deleteUser('<%= u.id %>')" class="btn-icon danger" title="Delete User">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.getElementById('userSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.custom-table tbody tr');
+
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+
+    async function toggleSuspend(userId) {
+        if(!confirm("Change this user's access status?")) return;
+        
+        try {
+            const resp = await fetch(`/admin/suspend-user/${userId}`, { method: 'POST' });
+            const data = await resp.json();
+            
+            if(data.success) {
+                const badge = document.getElementById(`status-${userId}`);
+                badge.innerHTML = `<span class="dot"></span> ${data.newStatus}`;
+                badge.className = `status-pill ${data.newStatus}`;
+            }
+        } catch (err) {
+            console.error("Failed to toggle status:", err);
+        }
+    }
+
+    async function deleteUser(userId) {
+        if(!confirm("Permanently delete this user? This cannot be undone.")) return;
+        
+        try {
+            const resp = await fetch(`/admin/delete-user/${userId}`, { method: 'DELETE' });
+            const data = await resp.json();
+            
+            if(data.success) {
+                const row = document.getElementById(`user-row-${userId}`);
+                row.style.transition = "all 0.4s ease";
+                row.style.transform = "translateX(20px)";
+                row.style.opacity = '0';
+                setTimeout(() => row.remove(), 400);
+            }
+        } catch (err) {
+            console.error("Failed to delete user:", err);
+        }
+    }
+    
+</script>

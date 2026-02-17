@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideManager.ejs") %>
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Live Orders & Pickups</h2>
+        </div>
+
+        <div class="table-card">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>ORDER ID</th>
+                        <th>CUSTOMER</th>
+                        <th>ITEMS</th>
+                        <th>TYPE</th>
+                        <th>STATUS</th>
+                        <th style="text-align: right; padding-right: 20px;">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td>#<%= order.id %></td>
+                            <td><strong><%= order.customer_name %></strong></td>
+                            <td><%= order.items %></td>
+                            <td><span class="type-tag"><%= order.order_type %></span></td>
+                            <td>
+                                <span class="status-pill <%= order.status.toLowerCase() %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                          <td style="display: flex; justify-content: flex-end; gap: 10px; padding-right: 20px;">
+                        <form action="/manager/update-order/<%= order.id %>" method="POST">
+                            <input type="hidden" name="status" value="completed">
+                            <button type="submit" class="btn-complete-icon" 
+                                    style="background-color: #22c55e; border: none; padding: 8px 12px; color: white; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-check"></i> Done
+                            </button>
+                        </form>
+</td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

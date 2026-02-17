@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+  </head>
+  <body>
+    <div class="head">
+      <nav>
+        <img class="logo" src="/images/Final SwiftBite Logo.png" alt="">
+  
+      </nav>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 20px;">
+    <a href="/customer/checkout" style="text-decoration: none; position: relative; color: #fff;">
+        <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+        <% if (locals.cartCount && cartCount > 0) { %>
+            <span style="position: absolute; top: -10px; right: 10px; background: #ff4f18; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem; font-weight: bold;">
+                <%= cartCount %>
+            </span>
+        <% } %>
+      </a>
+</div>
+      
+    </div>
+  </body>
+</html>

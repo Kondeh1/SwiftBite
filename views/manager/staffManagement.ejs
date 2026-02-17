@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+   <% if (error && error.length > 0) { %>
+        <div class="pop" id="error-popup">
+         <p><%= error %></p>    
+        </div>
+    <% } %>
+    <div class="dashboard-container">
+     
+        <%- include("../partials/asideManager.ejs") %>
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Staff Management</h2>
+                <button type="button" class="btn-primary" onclick="document.getElementById('addStaffModal').style.display='flex'">
+                    <i class="fa-solid fa-user-plus"></i> Add New Staff
+                </button>
+            </div>
+
+            <div class="table-card">
+               <table class="custom-table">
+    <thead>
+        <tr>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>ROLE</th>
+            <th class="text-right">ACTIONS</th> </tr>
+    </thead>
+    <tbody>
+        <% if (staffMembers && staffMembers.length > 0) { %>
+            <% staffMembers.forEach(staff => { %>
+                <tr>
+                    <td><strong><%= staff.full_name %></strong></td>
+                    <td><%= staff.email %></td>
+                    <td><span class="role-tag"><%= staff.role %></span></td>
+                    
+                    <td class="text-right">
+                        <form action="/manager/delete-staff/<%= staff.id %>" method="POST" onsubmit="return confirm('Remove this staff member?')" style="margin: 0; display: inline-block;">
+                            <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding: 5px; transition: transform 0.2s;">
+                                <i class="fa-solid fa-user-xmark" style="font-size: 1.1rem;"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>
+            </div>
+        </main>
+    </div>
+
+    <div id="addStaffModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Staff</h3>
+                <button class="close-btn" onclick="document.getElementById('addStaffModal').style.display='none'">&times;</button>
+            </div>
+            
+            <form action="/manager/add-staff" method="POST" class="staff-form">
+                <input type="hidden" name="restaurantId" value="<%= restaurantId %>">
+                
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" name="fullName" required placeholder="moriba">
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="moriba@gmail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Login Password</label>
+                    <div class="password-wrapper" style="position: relative;">
+                        <input type="password" name="password" id="staffPassword" required placeholder="Assign a password" style="padding-right: 45px;">
+                        <button type="button" id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; z-index: 10;">
+                        <i class="fa-solid fa-eye" style="color: #ff4f18ff;"></i>                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Role</label>
+                    <select name="role">
+                        <option value="waiter">Waiter</option>
+                        <option value="chef">Chef / Kitchen</option>
+                        <option value="delivery">Delivery</option>
+                        
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                    <button type="submit" class="btn-primary" style="flex: 1;">Create Account</button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('addStaffModal').style.display='none'" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('addStaffModal');
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordInput = document.querySelector('#staffPassword');
+            const eyeIcon = document.querySelector('#eyeIcon');
+
+            if (togglePassword) {
+                togglePassword.addEventListener('click', function (e) {
+                    e.preventDefault(); 
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    eyeIcon.classList.toggle('fa-eye');
+                    eyeIcon.classList.toggle('fa-eye-slash');
+                });
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        setTimeout(() => {
+            const popup = document.getElementById('error-popup');
+            if (popup) {
+                popup.style.opacity = '0';
+                popup.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => popup.remove(), 500);
+            }
+        }, 4000); 
+    </script>
+</body>
+</html>

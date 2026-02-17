@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery & Payment || SwiftBite</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      /* Spinning animation */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      /* State for the button when processing */
+      .btn-processing {
+        background-color: #d1d5db !important;
+        color: #9ca3af !important;
+        cursor: not-allowed !important;
+        pointer-events: none; /* Prevents double clicks */
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("../partials/cHeader.ejs") %>
+    <div class="dashboard-container">
+      <%- include("../partials/asideCustomer.ejs") %>
+      <main class="main-content" style="background: #f8f9fa; padding: 40px">
+        <div
+          style="
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <h2 style="color: #1e293b; margin-bottom: 20px">
+            Delivery & Payment
+          </h2>
+
+          <div
+            style="
+              background: #f1f5f9;
+              padding: 15px;
+              border-radius: 10px;
+              margin-bottom: 15px;
+            "
+          >
+            <p style="font-size: 1.2rem; margin: 0">
+              <strong>Order Total:</strong>
+              <span style="color: #1e293b; font-weight: 700"
+                >Le <%= order.total %></span
+              >
+            </p>
+            <p style="margin: 5px 0 0; color: #64748b">
+              <%= order.items.length %> items selected
+            </p>
+          </div>
+
+          <div
+            style="
+              background: #fff8e6;
+              border: 1px solid #ffeaa7;
+              padding: 15px;
+              border-radius: 10px;
+              margin-bottom: 25px;
+            "
+          >
+            <h4 style="margin: 0 0 10px 0; color: #d35400">
+              <i class="fa-solid fa-receipt"></i> Payment Split (50/50)
+            </h4>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 5px;
+                font-weight: 600;
+              "
+            >
+              <span>Pay Now (Deposit):</span>
+              <span style="color: #ff4f18">Le <%= depositAmount %></span>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                color: #64748b;
+                font-size: 0.9rem;
+              "
+            >
+              <span>Pay on Delivery:</span>
+              <span>Le <%= depositAmount %></span>
+            </div>
+          </div>
+
+          <form
+            id="paymentForm"
+            action="/customer/order/final-confirm"
+            method="POST"
+          >
+            <input
+              type="hidden"
+              name="totalAmount"
+              value="<%= order.total %>"
+            />
+            <input
+              type="hidden"
+              name="depositAmount"
+              value="<%= depositAmount %>"
+            />
+            <input
+              type="hidden"
+              name="restaurantId"
+              value="<%= order.items[0].restaurant_id %>"
+            />
+
+            <div style="margin-bottom: 20px">
+              <label
+                style="display: block; margin-bottom: 8px; font-weight: 600"
+                >Delivery Address</label
+              >
+              <input
+                type="text"
+                name="address"
+                placeholder="Enter your current address"
+                required
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border: 1px solid #ddd;
+                  border-radius: 10px;
+                "
+              />
+            </div>
+
+            <div style="margin-bottom: 20px">
+              <label
+                style="display: block; margin-bottom: 8px; font-weight: 600"
+                >Phone Number</label
+              >
+              <input
+                type="tel"
+                name="phone"
+                placeholder="e.g. +23276589691"
+                required
+                minlength="12"
+                maxlength="12"
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border: 1px solid #ddd;
+                  border-radius: 10px;
+                "
+              />
+            </div>
+
+            <div style="margin-bottom: 20px">
+              <label
+                style="display: block; margin-bottom: 8px; font-weight: 600"
+                >Order Type</label
+              >
+              <select
+                name="orderType"
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  border: 1px solid #ddd;
+                  border-radius: 10px;
+                "
+              >
+                <option value="Delivery">Delivery</option>
+                <option value="Pickup">Pickup</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 25px"></div>
+
+            <button
+              type="submit"
+              id="payButton"
+              style="
+                width: 100%;
+                padding: 18px;
+                border: none;
+                font-size: 1.1rem;
+                cursor: pointer;
+                background: #ff4f18;
+                color: white;
+                border-radius: 12px;
+                font-weight: bold;
+                transition: background 0.3s;
+              "
+            >
+              Pay Le <%= depositAmount %> & Place Order
+            </button>
+          </form>
+
+          <div style="display: flex; justify-content: center; margin-top: 20px">
+            <a
+              href="/customer/checkout"
+              style="text-decoration: none; color: #64748b; font-size: 0.9rem"
+            >
+              <i class="fa-solid fa-arrow-left"></i> Back to Cart
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const paymentForm = document.getElementById("paymentForm");
+      const payButton = document.getElementById("payButton");
+
+      paymentForm.addEventListener("submit", function (e) {
+        // 1. Prevent double-submission if already processing
+        if (payButton.classList.contains("btn-processing")) {
+          e.preventDefault();
+          return;
+        }
+
+        // 2. Add visual loading state
+        payButton.classList.add("btn-processing");
+        payButton.innerHTML =
+          '<div class="spinner"></div> Connecting to Monime...';
+
+        // Note: We don't set 'disabled = true' here because some browsers
+        // omit disabled fields/buttons from the form submission.
+        // The 'pointer-events: none' in CSS handles the click-blocking.
+      });
+    </script>
+  </body>
+</html>

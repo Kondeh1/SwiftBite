@@ -1,15 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SwiftBite || Settings Page</title>
-  </head>
-  <body>
+    <link rel="stylesheet" href="/css/style.css"> 
+</head>
+<body>
     <%- include("../partials/header.ejs") %>
     <div class="dashboard-container">
-      <%-include("../partials/aside.ejs") %>
-      <h1>Settings</h1>
+        <%- include("../partials/aside.ejs") %>
+        
+        <div class="settings-main">
+            <div class="settings-header">
+                <h2>Account Settings</h2>
+                <p>Review and update your administrator credentials</p>
+            </div>
+
+            <% if (locals.user) { %>
+                <div class="profile-overview-card">
+                    <div class="profile-avatar-section">
+                        <form id="avatarForm" action="/update-profile-image" method="POST" enctype="multipart/form-data">
+                        <div class="avatar-wrapper">
+                            <img id="adminAvatar" src="<%= user.profile_image || '/images/IMG-20260112-WA0038.jpg' %>" alt="Admin Avatar">
+                            
+                            <input type="file" id="avatarInput" name="profileImage" accept="image/*" style="display: none;" onchange="this.form.submit()">
+                            
+                            <label for="avatarInput" class="avatar-edit-btn">
+                            <i class="fas fa-camera"></i>
+                            </label>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="profile-details-section">
+                        <h3 id="displayFullName"><%= user.full_name %></h3>
+                        <p id="displayEmail"><%= user.email %></p>
+                        <div class="status-tags">
+                            <span class="role-tag">Admin</span>
+                            <span class="online-tag"><i class="fas fa-circle"></i> System Online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="form-card">
+                        <div class="card-title">
+                            <i class="fas fa-user"></i>
+                            <h4>Personal Information</h4>
+                        </div>
+                        <form action="/admin/update-profile" method="POST">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" name="fullName" value="<%= user.full_name %>" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="email" name="email" value="<%= user.email %>" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <div class="form-card">
+    <div class="card-title">
+        <i class="fas fa-shield-alt"></i>
+        <h4>Security & Password</h4>
     </div>
-  </body>
+    
+    <div id="passwordMessage" style="margin-bottom: 15px; font-size: 14px; display: none;"></div>
+
+    <form action="/admin/change-password" method="POST">
+        <div class="input-group">
+            <label>New Password</label>
+            <input type="password" name="newPassword" placeholder="Min. 8 characters" required>
+        </div>
+        <div class="input-group">
+            <label>Confirm Password</label>
+            <input type="password" name="confirmPassword" placeholder="Repeat password" required>
+        </div>
+        <button type="submit" class="btn-dark">Update Password</button>
+    </form>
+</div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+document.getElementById('avatarInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('adminAvatar').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+const socket = io();
+
+socket.on('profileUpdated', (data) => {
+    if (data.fullName) {
+        document.getElementById('displayFullName').innerText = data.fullName;
+    }
+    if (data.email) {
+        document.getElementById('displayEmail').innerText = data.email;
+    }
+    
+    document.querySelector('input[name="fullName"]').value = data.fullName;
+    document.querySelector('input[name="email"]').value = data.email;
+});
+
+document.querySelector('form[action="/admin/update-profile"]').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const fullName = this.fullName.value;
+    const email = this.email.value;
+
+    fetch('/admin/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            console.log("Profile updated and broadcasted!");
+        }
+    });
+});
+document.querySelector('form[action="/admin/change-password"]').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const msgDiv = document.getElementById('passwordMessage');
+    const newPassword = this.newPassword.value;
+    const confirmPassword = this.confirmPassword.value;
+
+    fetch('/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPassword, confirmPassword })
+    })
+    .then(async res => {
+        const data = await res.json();
+        msgDiv.style.display = 'block';
+        msgDiv.innerText = data.message;
+
+        if(!res.ok) {
+            msgDiv.style.color = '#e74c3c';
+        } else {
+            msgDiv.style.color = '#27ae60';
+            this.reset();
+        }
+
+        setTimeout(() => { msgDiv.style.display = 'none'; }, 5000);
+    })
+    .catch(err => {
+        console.error("Error:", err);
+    });
+});
+</script>
 </html>

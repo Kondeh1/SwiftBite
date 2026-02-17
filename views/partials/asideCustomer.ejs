@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <!-- <div class="sidebar-header">
+        <h3 class="res-name">
+          SWIFTBITE
+          <span
+            id="connection-dot"
+            class="dot offline"
+            title="Connection Status"
+          ></span>
+        </h3>
+      </div> -->
+      
+      <nav>
+        <ul>
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'home') ? 'active' : '' %>"
+          >
+            <a href="/customer/home" class="nav-link">
+              <i class="fa-solid fa-house"></i> <span>Explore Food</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'my-orders') ? 'active' : '' %>"
+          >
+            <a href="/customer/orders" class="nav-link">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span>My Orders</span>
+              <span id="active-order-badge" class="badge">0</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'favorites') ? 'active' : '' %>"
+          >
+            <a href="/customer/favorites" class="nav-link">
+              <i class="fa-solid fa-heart"></i>
+              <span>Favorites</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'wallet') ? 'active' : '' %>"
+          >
+            <a href="/customer/wallet" class="nav-link">
+              <i class="fa-solid fa-wallet"></i>
+              <span>SwiftCash</span>
+            </a>
+          </li>
+
+          <li
+            class="<%= (typeof currentPage !== 'undefined' && currentPage === 'profile') ? 'active' : '' %>"
+          >
+            <a href="/customer/settings" class="nav-link">
+              <i class="fa-solid fa-user-gear"></i>
+              <span>Account Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/logout" class="logout-btn">
+          <span>Log Out</span> <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+    </aside>
+
+    <script>
+      const socket = io();
+
+      // Update badge when an order status changes (e.g., Out for Delivery)
+      socket.on("orderUpdate", (data) => {
+        const badge = document.getElementById("active-order-badge");
+        // Logic to increment or show badge
+        badge.style.display = "inline-block";
+        badge.classList.add("pulse-animation");
+        badge.innerText = "!";
+
+        const alertSound = new Audio("/sounds/notification.mp3");
+        alertSound.play();
+      });
+
+      // Connection Status Logic
+      socket.on("connect", () => {
+        const dot = document.getElementById("connection-dot");
+        dot.classList.remove("offline");
+        dot.classList.add("online");
+      });
+
+      socket.on("disconnect", () => {
+        const dot = document.getElementById("connection-dot");
+        dot.classList.remove("online");
+        dot.classList.add("offline");
+      });
+    </script>
+  </body>
+</html>

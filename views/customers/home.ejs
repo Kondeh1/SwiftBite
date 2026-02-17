@@ -1,11 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SwiftBite || Customers Page</title>
-</head>
-<body>
-    <h1>Customers</h1>
-</body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  </head>
+  <body>
+    <%- include("../partials/cHeader.ejs") %>
+    <div class="dashboard-container">
+      <%- include("../partials/asideCustomer.ejs") %>
+
+      <main class="main-content" style="background: #f8f9fa; padding: 40px">
+        <header class="admin-header" style="margin-bottom: 30px;">
+          <div class="header-title">
+            <h2>Welcome to SwiftBite.</h2>
+            <p>Select a restaurant to view their menu and start ordering.</p>
+          </div>
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="restaurantSearch" placeholder="Search restaurants..." />
+          </div>
+        </header>
+
+        <div class="restaurant-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
+          
+   <% if (typeof restaurants !== 'undefined' && restaurants.length > 0) { %>
+  <% restaurants.forEach(res => { %>
+    <div class="res-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+      
+      <div class="res-img" style="height: 180px; background: #eee; position: relative;">
+        <img src="<%= res.image_url || '/images/default-restaurant.jpg' %>" alt="<%= res.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+
+      <div class="res-body" style="padding: 20px;">
+        <h4 style="font-size: 1.2rem; color: #1e293b; margin-bottom: 5px;"><%= res.name %></h4>
+        
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">
+          <i class="fa-solid fa-location-dot"></i> <%= res.address %>
+        </p>
+
+        <a href="/customer/restaurant/<%= res.id %>/menu" class="confirm-withdraw-btn" style="text-decoration: none; display: block; text-align: center; padding: 12px;">
+          View Menu <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+        </a>
+      </div>
+    </div>
+  <% }); %>
+          <% } else { %>
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <i class="fa-solid fa-utensils"></i>
+              <h3>No Restaurants Available</h3>
+              <p>We're currently onboarding more partners. Check back soon!</p>
+            </div>
+          <% } %>
+
+        </div>
+      </main>
+    </div>
+
+   <script>
+  document.getElementById('restaurantSearch').addEventListener('input', function(e) {
+    // 1. Get the search term and convert to lowercase for case-insensitive matching
+    const searchTerm = e.target.value.toLowerCase().trim();
+    
+    // 2. Select all restaurant cards
+    const cards = document.querySelectorAll('.res-card');
+    let foundAny = false;
+
+    cards.forEach(card => {
+      // 3. Get the text from the name (h4) and address (p)
+      const name = card.querySelector('h4').innerText.toLowerCase();
+      const address = card.querySelector('p').innerText.toLowerCase();
+
+      // 4. Check if the term exists in either the name or address
+      if (name.includes(searchTerm) || address.includes(searchTerm)) {
+        card.style.display = 'block';
+        foundAny = true;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // 5. Optional: Handle the "No results found" view
+    const emptyState = document.querySelector('.empty-state');
+    if (!foundAny && searchTerm !== "") {
+      if (emptyState) emptyState.style.display = 'block';
+    } else {
+      // If we found results or the search is empty, hide the empty state 
+      // unless the database itself is empty (handled by EJS)
+      if (emptyState && cards.length > 0) emptyState.style.display = 'none';
+    }
+  });
+</script>
+  </body>
 </html>

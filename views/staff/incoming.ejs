@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incoming Orders</title>
+    <link rel="stylesheet" href="/css/staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .order-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 10px;
+        }
+        .order-table th {
+            padding: 12px 20px;
+            text-align: left;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        .order-row {
+            background: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .order-row td {
+            padding: 15px 20px;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .order-row td:first-child {
+            border-left: 1px solid #f1f5f9;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            font-weight: bold;
+        }
+        .order-row td:last-child {
+            border-right: 1px solid #f1f5f9;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .order-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .price-tag {
+            color: #ff4f18;
+            font-weight: 700;
+        }
+        @keyframes slideInRow {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .new-row-anim {
+            animation: slideInRow 0.5s ease-out;
+            border-left: 4px solid #2ecc71 !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/header.ejs") %>
+    <div class="dashboard-container">
+        <%- include("../partials/asideStaff.ejs") %>
+
+        <main class="admin-main">
+            <div class="incoming-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <div class="header-title">
+                    <h1 style="display: flex; align-items: center; gap: 15px; margin: 0;">
+                        <i class="fa-solid fa-bell" style="color: #ff4f18;"></i> New Incoming Orders
+                        <div id="connection-dot" title="Connection Status" style="height:12px; width:12px; background-color:#bbb; border-radius:50%; transition: background-color 0.3s ease;"></div>
+                        <button onclick="testSound()" title="Test Notification Sound" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.9rem; padding: 5px; display: flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-volume-high"></i> Test Sound
+                        </button>
+                    </h1>
+                    <p style="color: #64748b; margin-top: 5px; font-size: 0.9rem;">Real-time order management console</p>
+                </div>
+
+                <div class="stats-badge">
+                    <span class="count-num" id="live-counter"><%= orders ? orders.length : 0 %></span> Pending Orders
+                </div>
+            </div>
+
+            <div id="orders-container">
+                <% if (orders && orders.length > 0) { %>
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Time</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <% orders.forEach(order => { %>
+                                <tr class="order-row" id="order-<%= order.order_id %>">
+                                    <td>#<%= order.order_id %></td>
+                                    <td style="color: #64748b;">
+                                        <%= new Date(order.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                    </td>
+                                    <td><%= order.customer_name %></td>
+                                    <td><span class="price-tag">Le <%= order.amount %></span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn-accept" onclick="processOrder('<%= order.order_id %>', 'preparing')">Accept</button>
+                                        <button class="btn-reject" onclick="processOrder('<%= order.order_id %>', 'rejected')">Reject</button>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div id="no-orders" class="empty-state" style="text-align: center; padding: 60px; background: white; border-radius: 20px;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 50px; color: #2ecc71; margin-bottom: 20px;"></i>
+                        <h1>All caught up.</h1>
+                        <p style="color: #94a3b8;">No new orders right now. New orders will appear here automatically.</p>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+
+    <audio id="notification-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        (function() {
+            const socket = io();
+            const restaurantId = "<%= restaurantId %>";
+            
+            const liveCounter = document.getElementById("live-counter");
+            const connectionDot = document.getElementById("connection-dot");
+            const notificationSound = document.getElementById("notification-sound");
+
+            window.testSound = function() {
+                if (notificationSound) {
+                    notificationSound.currentTime = 0;
+                    notificationSound.play()
+                        .then(() => console.log("Sound test successful."))
+                        .catch(e => alert("Please click anywhere on the page first to enable audio."));
+                }
+            };
+
+            socket.emit("joinRestaurantRoom", restaurantId);
+
+            socket.on("connect", () => {
+                if (connectionDot) {
+                    connectionDot.style.backgroundColor = "#2ecc71";
+                    connectionDot.style.boxShadow = "0 0 8px #2ecc71";
+                }
+            });
+
+            socket.on("disconnect", () => {
+                if (connectionDot) {
+                    connectionDot.style.backgroundColor = "#e74c3c";
+                    connectionDot.style.boxShadow = "none";
+                }
+            });
+
+            function updatePendingCount(modifier) {
+                if (liveCounter) {
+                    let currentCount = parseInt(liveCounter.innerText) || 0;
+                    liveCounter.innerText = Math.max(0, currentCount + modifier);
+                }
+            }
+
+            window.processOrder = async function(orderId, status) {
+                try {
+                    const response = await fetch(`/staff/update-order/${orderId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status })
+                    });
+
+                    if (response.ok) {
+                        const row = document.getElementById(`order-${orderId}`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(50px)';
+                            setTimeout(() => {
+                                row.remove();
+                                updatePendingCount(-1);
+                                if (document.querySelectorAll('.order-row').length === 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Fetch error:", err);
+                }
+            };
+
+            socket.on("newOrder", (data) => {
+                // Play Sound
+                if (notificationSound) {
+                    notificationSound.currentTime = 0; 
+                    notificationSound.play().catch(e => console.log("Audio blocked."));
+                }
+
+                const emptyState = document.getElementById("no-orders");
+                if (emptyState) {
+                    location.reload(); // Refresh to initialize table structure
+                    return;
+                }
+
+                const tbody = document.getElementById("orders-tbody");
+                const rowHtml = `
+                    <tr class="order-row new-row-anim" id="order-${data.orderId}">
+                        <td>#${data.orderId}</td>
+                        <td style="color: #64748b;">Just Now</td>
+                        <td>${data.customerName}</td>
+                        <td><span class="price-tag">Le ${data.amount}</span></td>
+                        <td style="text-align: right;">
+                            <button class="btn-accept" onclick="processOrder('${data.orderId}', 'preparing')">Accept</button>
+                            <button class="btn-reject" onclick="processOrder('${data.orderId}', 'rejected')">Reject</button>
+                        </td>
+                    </tr>`;
+                
+                tbody.insertAdjacentHTML('afterbegin', rowHtml);
+                updatePendingCount(1);
+            });
+        })();
+    </script>
+</body>
+</html>

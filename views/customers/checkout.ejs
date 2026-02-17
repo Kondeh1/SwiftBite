@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout || SwiftBite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        .checkout-table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; }
+        .checkout-table th { background: #f1f5f9; padding: 15px; text-align: left; color: #475569; }
+        .checkout-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .summary-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .remove-btn { color: #ef4444; cursor: pointer; border: none; background: none; transition: 0.2s; }
+        .remove-btn:hover { color: #b91c1c; transform: scale(1.1); }
+    </style>
+</head>
+<body>
+<%- include("../partials/cHeader.ejs") %>
+<div class="dashboard-container">
+    <%- include("../partials/asideCustomer.ejs") %>
+
+    <main class="main-content" style="background: #f8f9fa; padding: 40px">
+        <h2 style="margin-bottom: 30px; color: #1e293b;">Your Shopping Cart</h2>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            
+            <div class="cart-items">
+                <% if (cart && cart.length > 0) { %>
+                    <table class="checkout-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cart.forEach(item => { %>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <img src="<%= item.image %>" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
+                                            <span style="font-weight: 600;"><%= item.name %></span>
+                                        </div>
+                                    </td>
+                                    <td>Le <%= item.price %></td>
+                                    <td>x<%= item.quantity %></td>
+                                    <td style="font-weight: 700;">Le <%= item.price * item.quantity %></td>
+                                    <td>
+                                        <form action="/customer/cart/remove/<%= item.id %>" method="POST">
+<button class="remove-btn" data-id="<%= item.id %>" style="background: none; border: none; color: red; cursor: pointer;">
+    <i class="fa-solid fa-trash"></i>
+</button>                                        </form>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div style="text-align: center; padding: 50px; background: white; border-radius: 20px;">
+                        <i class="fa-solid fa-cart-shopping" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                        <p style="color: #64748b;">Your cart is empty.</p>
+                        <a href="/customer/home" class="confirm-withdraw-btn" style="display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 20px;">Browse Restaurants</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <% if (cart && cart.length > 0) { %>
+                <div class="summary-card">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Order Summary</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #64748b;">
+                        <span>Subtotal</span>
+                        <span>Le <%= total %></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #64748b;">
+                        <span>Delivery Fee</span>
+                        <span>Le 0.00</span>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
+                        <span style="font-weight: 700; font-size: 1.2rem;">Total</span>
+                        <span style="font-weight: 700; font-size: 1.2rem; color: #ff4f18;">Le <%= total %></span>
+                    </div>
+
+                    <form action="/customer/order/place" method="POST">
+                        <button type="submit" class="confirm-withdraw-btn" style="width: 100%; padding: 15px; font-size: 1.1rem; border: none; cursor: pointer;">
+                            Confirm & Place Order
+                        </button>
+                    </form>
+                    
+                   <a href="/customer/cart/clear" 
+                    style="display: block; text-align: center; margin-top: 15px; color: #94a3b8; text-decoration: none; font-size: 0.9rem;"
+                    onclick="return confirm('Are you sure you want to clear your entire cart?')">
+                        Cancel Order
+                    </a>
+                </div>
+            <% } %>
+
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            // 1. STOP the form from refreshing the page
+            e.preventDefault();
+            
+            const id = button.getAttribute('data-id');
+            const row = button.closest('tr');
+
+            try {
+                const response = await fetch(`/customer/cart/remove/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // 2. Animate the removal
+                    row.style.transition = "0.3s";
+                    row.style.opacity = "0";
+                    row.style.transform = "translateX(-20px)";
+                    
+                    setTimeout(() => {
+                        row.remove();
+                        // 3. Refresh to update the Summary Total and Badge
+                        window.location.reload(); 
+                    }, 300);
+                } else {
+                    alert("Could not remove item.");
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+            }
+        });
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'payment_failed') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: 'Your payment could not be processed. Please try again or use a different method.',
+            confirmButtonColor: '#ff4f18'
+        });
+    }
+</script>
+</body>
+</html> 

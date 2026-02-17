@@ -1,15 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <title>SwiftBite || Verification Queue</title>
-  </head>
-  <body>
+</head>
+<body>
     <%- include("../partials/header.ejs") %>
     <div class="dashboard-container">
-      <%-include("../partials/aside.ejs") %>
-      <h1>Verification</h1>
+        <%- include("../partials/aside.ejs") %>
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h2>Restaurant Verification Queue.</h2>
+                    <p>Review and manage new restaurant partnerships.</p>
+                </div>
+                <div class="stats-badge">
+                    <span class="count-num"><%= pendingRestaurants.length %></span> Pending Requests
+                </div>
+            </div>
+
+            <div class="verification-wrapper">
+                <% if (pendingRestaurants.length === 0) { %>
+                    <div class="empty-state">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <h3>All caught up.</h3>
+                        <p>No restaurants are currently waiting for verification.</p>
+                    </div>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Restaurant Details</th>
+                                    <th>Owner</th>
+                                    <th>Submission Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% pendingRestaurants.forEach(restaurant => { %>
+                                    <tr>
+                                        <td>
+                                            <div class="res-info">
+                                                <div class="res-img-mini">
+                                                    <i class="fa-solid fa-utensils"></i>
+                                                </div>
+                                                <div>
+                                                    <span class="res-name"><%= restaurant.name %></span>
+                                                    <span class="res-loc"><i class="fa-solid fa-location-dot"></i> <%= restaurant.address %></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="owner-info">
+                                                <i class="fa-solid fa-user-tie"></i> <%= restaurant.owner_name %>
+                                            </div>
+                                        </td>
+                                        <td><%= new Date(restaurant.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+                                        <td><span class="badge pending">Pending Review</span></td>
+                                        <td class="text-right">
+                                            <div class="action-buttons">
+                                                <form action="/admin/verify-restaurant/<%= restaurant.id %>" method="POST">
+                                                    <input type="hidden" name="action" value="approved">
+                                                    <button type="submit" class="action-btn approve" title="Approve Restaurant">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="/admin/verify-restaurant/<%= restaurant.id %>" method="POST">
+                                                    <input type="hidden" name="action" value="rejected">
+                                                    <button type="submit" class="action-btn reject" title="Reject Request">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </main>
     </div>
-  </body>
+</body>
 </html>

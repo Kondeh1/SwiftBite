@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard</title>
+  </head>
+  <body>
+    <%- include("../partials/header.ejs") %>
+    <div class="dashboard-container">
+      <%- include("../partials/asideStaff.ejs") %>
+
+      <main class="admin-main">
+        <div class="header">
+          <h1>Staff Dashboard</h1>
+        </div>
+
+        <div class="stats-grid">
+          <div class="card blue">
+        <div class="card-content">
+            <h3>Current Orders</h3>
+            <h2 id="current-orders-count"><%= activeOrdersCount %></h2>
+            <p>Live processing</p>
+        </div>
+        <i class="fa-solid fa-fire-burner card-icon"></i>
+        </div>
+      <div class="card orange">
+  <div class="card-content">
+    <h3>Total Orders</h3>
+    <h2 id="total-orders-today"><%= totalOrdersToday %></h2>
+    <p>Completed today</p>
+  </div>
+  <i class="fa-solid fa-list-check card-icon"></i>
+</div>
+        </div>
+
+        <!-- <div class="logs-container">
+          <h3>Live System Logs</h3>
+          <div id="staff-logs" class="logs-list">
+            <div class="log-item initial">
+              <span class="log-time">Just now:</span> Staff dashboard
+              initialized.
+            </div>
+          </div>
+        </div> -->
+        <section class="recent-activity">
+            <ul id="activity-list">
+  <% if (activities && activities.length > 0) { %>
+    <% activities.forEach(act => { %>
+      <li class="activity-item">
+        <div class="activity-bullet <%= act.type %>"></div>
+        <div class="activity-text">
+          <% if (act.type === 'new_order') { %>
+            New order <strong>#<%= act.order_id %></strong> received for <span>Le <%= act.amount %></span>
+          <% } else if (act.type === 'delivered') { %>
+            Order <strong>#<%= act.order_id %></strong> was successfully <span>Delivered</span>
+          <% } else { %>
+            <strong>System:</strong> <%= act.message %>
+          <% } %>
+          <span class="activity-date"><%= new Date(act.created_at).toLocaleTimeString() %></span>
+        </div>
+      </li>
+    <% }) %>
+  <% } else { %>
+    <li class="activity-item" id="no-activity">No recent activity.</li>
+  <% } %>
+</ul>
+        </section>
+      </main>
+    </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.socket = io();
+  const restaurantId = "<%= restaurantId %>";
+  const activityList = document.getElementById("activity-list");
+  const orderSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
+
+  window.socket.on("connect", () => {
+    if (restaurantId) {
+      window.socket.emit("joinRestaurantRoom", restaurantId);
+      console.log("Joined room for restaurant:", restaurantId);
+    }
+  });
+
+  window.socket.on("newOrder", (data) => {
+    console.log("ALERTS: New Order Received!", data);
+    
+    // Play sound
+    orderSound.play().catch(e => console.warn("Click page to enable audio"));
+
+    // Remove "No activity" message if it exists
+    const noActivityMsg = document.getElementById("no-activity");
+    if (noActivityMsg) noActivityMsg.remove();
+
+    // UI Update: Only the text color is changed to green via the 'text-green' class
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const newHtml = `
+      <li class="activity-item">
+        <div class="activity-bullet new_order"></div>
+        <div class="activity-text">
+          <span class="text-green">New order</span> 
+          <strong class="text-green">#${data.orderId}</strong> received for 
+          <span class="amount-highlight">Le ${data.total}</span>
+          <span class="activity-date">${time}</span>
+        </div>
+      </li>`;
+    
+    activityList.insertAdjacentHTML('afterbegin', newHtml);
+
+    // Increment the counter
+    const counter = document.getElementById("current-orders-count");
+    if (counter) {
+      counter.innerText = parseInt(counter.innerText) + 1;
+    }
+  });
+
+  // Enable audio context on first click
+  document.body.addEventListener('click', () => {
+    console.log("Audio alert system active");
+  }, { once: true });
+</script>
+  </body>
+</html>

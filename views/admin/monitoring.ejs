@@ -15,7 +15,250 @@
     <%- include("../partials/header.ejs") %>
     <div class="dashboard-container">
       <%-include("../partials/aside.ejs") %>
-      <h1>Monitoring</h1>
+      <div class="monitoring-content">
+        <div class="admin-header">
+          <div class="header-title">
+            <h2>System Monitoring & Revenue</h2>
+            <p>Real-time financial performance at a glance</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card highlight">
+            <span class="label">Your Earnings</span>
+            <span class="percentage">(25%)</span>
+            <h3>NLe <%= (totalRevenue * 0.25).toLocaleString() %></h3>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Gross Volume</span>
+            <span class="percentage">(100%)</span>
+            <h3>NLe <%= totalRevenue.toLocaleString() %></h3>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Restaurant Payouts</span>
+            <span class="percentage">(75%)</span>
+            <h3>NLe <%= (totalRevenue * 0.75).toLocaleString() %></h3>
+          </div>
+
+          <div class="stat-card">
+            <span class="label">Total Orders</span>
+            <span class="percentage">(Actual)</span>
+          </div>
+        </div>
+        <div class="action-buttons-row">
+          <button class="open-withdraw-btn" onclick="openWithdrawModal()">
+            Withdraw Funds <i class="fa-solid fa-wallet"></i>
+          </button>
+
+          <button class="open-withdraw-btn" onclick="toggleHistory()">
+            Transactions <i class="fa-solid fa-history"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="historySection" class="transaction-container">
+        <div class="section-header">
+          <h3>Recent Transactions</h3>
+          <span class="badge">Last 10 Records</span>
+        </div>
+
+        <div class="history-table-wrapper">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="4" style="text-align: center">
+                  Loading history...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="withdrawModal" class="modal-overlay">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Secure Withdrawal</h3>
+            <button class="close-btn" onclick="closeWithdrawModal()">
+              &times;
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="available-box">
+              <span class="label">Available Balance</span>
+              <h2 id="modalBalance">
+                NLe <%= (totalRevenue * 0.25).toLocaleString() %>
+              </h2>
+            </div>
+
+            <form
+              id="withdrawForm"
+              onsubmit="handleWithdrawal(event)"
+              action="/admin/withdraw"
+              method="post"
+            >
+              <div class="form-group">
+                <label for="Phone Number">Enter Withdraw Phone Number:</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  id=""
+                  placeholder="Please use this format: +23276589691"
+                  minlength="12"
+                  maxlength="12"
+                />
+                <label>Amount to Withdraw (NLe)</label>
+                <input
+                  type="number"
+                  id="withdrawAmount"
+                  placeholder="Enter amount"
+                  min="1"
+                  step="0.01"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Payment Method</label>
+                <div class="custom-select">
+                  <select id="withdrawMethod">
+                    <option value="orange_money">Orange Money</option>
+                    <option value="africell_money">Africell Money</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="confirm-withdraw-btn">
+                Confirm & Transfer
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
+
+  <script>
+    function openWithdrawModal() {
+      document.getElementById("withdrawModal").style.display = "flex";
+    }
+
+    function closeWithdrawModal() {
+      document.getElementById("withdrawModal").style.display = "none";
+    }
+
+    function toggleHistory() {
+      const historySection = document.getElementById("historySection");
+      if (
+        historySection.style.display === "none" ||
+        historySection.style.display === ""
+      ) {
+        historySection.style.display = "block";
+        fetchWithdrawalHistory();
+      } else {
+        historySection.style.display = "none";
+      }
+    }
+
+    window.onclick = function (event) {
+      const modal = document.getElementById("withdrawModal");
+      if (event.target == modal) {
+        closeWithdrawModal();
+      }
+    };
+
+    async function handleWithdrawal(event) {
+      event.preventDefault();
+
+      const amount = document.getElementById("withdrawAmount").value;
+      const method = document.getElementById("withdrawMethod").value;
+      const btn = event.submitter;
+
+      btn.innerText = "Processing...";
+      btn.disabled = true;
+
+      try {
+        const response = await fetch("/admin/withdraw", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: amount,
+            method: method,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // alert(`Success! ${result.message}`);
+          closeWithdrawModal();
+          fetchWithdrawalHistory();
+          location.reload();
+        } else {
+          alert(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        console.error("Withdrawal Error:", error);
+        // alert("Internal server error. Please try again later.");
+      } finally {
+        btn.innerText = "Confirm & Transfer";
+        btn.disabled = false;
+      }
+    }
+
+    async function fetchWithdrawalHistory() {
+      const tbody = document.getElementById("historyTableBody");
+
+      try {
+        const response = await fetch("/admin/withdrawal-history");
+        const data = await response.json();
+
+        if (data.success && data.history && data.history.length > 0) {
+          tbody.innerHTML = data.history
+            .map((row) => {
+              const statusClass = row.status
+                ? row.status.toLowerCase()
+                : "pending";
+              const formattedDate = new Date(
+                row.created_at,
+              ).toLocaleDateString();
+              const amount = parseFloat(row.amount).toLocaleString();
+              const method = row.method ? row.method.replace(/_/g, " ") : "N/A";
+
+              return `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 15px;">${formattedDate}</td>
+                    <td style="padding: 15px;"><strong>NLe ${amount}</strong></td>
+                    <td style="padding: 15px; text-transform: capitalize;">${method}</td>
+                    <td style="padding: 15px;">
+                        <span class="status-tag ${statusClass}">
+                            ${row.status}
+                        </span>
+                    </td>
+                </tr>
+            `;
+            })
+            .join("");
+        } else {
+          tbody.innerHTML =
+            '<tr><td colspan="4" style="text-align:center; padding: 40px; color: #999;">No transactions found in database.</td></tr>';
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        tbody.innerHTML =
+          '<tr><td colspan="4" style="text-align:center; color:red; padding: 20px;">Connection error. Could not load transactions.</td></tr>';
+      }
+    }
+  </script>
 </html>

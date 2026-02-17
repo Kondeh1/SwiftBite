@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order #<%= order.id %> || SwiftBite</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        .status-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .progress-track {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        /* Connecting line */
+        .progress-track::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #eee;
+            z-index: 1;
+        }
+        .step { 
+            color: #ccc; 
+            font-size: 0.8rem; 
+            flex: 1; 
+            z-index: 2; 
+            background: white; 
+        }
+        .step i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .step.active { 
+            color: #ff4f18; 
+            font-weight: bold; 
+        }
+        .btn-cancel {
+            background: #ffeded;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        .btn-cancel:hover { 
+            background: #e74c3c; 
+            color: white; 
+        }
+    </style>
+</head>
+<body style="background: #f8f9fa;">
+    <%- include("../partials/cHeader.ejs") %>
+    
+    <div class="dashboard-container" style="display: flex;">
+        <%- include("../partials/asideCustomer.ejs") %>
+
+        <main class="main-content" style="flex: 1; padding: 20px;">
+            <div class="status-container">
+                <h2 style="color: #1e293b;">Order #<%= order.id %></h2>
+                <p>Status: <strong style="color: #ff4f18;"><%= order.status.toUpperCase() %></strong></p>
+
+<div class="progress-track">
+    <div class="step <%= ['confirmed', 'preparing', 'delivered', 'completed'].includes(order.status) ? 'active' : '' %>">
+        <i class="fa-solid fa-circle-check"></i><br>Confirmed
+    </div>
+    
+    <div class="step <%= ['preparing', 'delivered', 'completed'].includes(order.status) ? 'active' : '' %>">
+        <i class="fa-solid fa-utensils"></i><br>Preparing
+    </div>
+    
+    <div class="step <%= ['delivered', 'completed'].includes(order.status) ? 'active' : '' %>">
+        <i class="fa-solid fa-motorcycle"></i><br>Delivered
+    </div>
+</div>
+
+                <div style="background: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: left;">
+                    <p style="margin-bottom: 8px;"><strong><i class="fa-solid fa-hamburger"></i> Items:</strong> <%= order.items %></p>
+                    <p style="margin: 0;"><strong><i class="fa-solid fa-money-bill-wave"></i> Deposit Paid:</strong> Le <%= order.deposit %></p>
+                </div>
+
+                <% if (order.status === 'confirmed' || order.status === 'pending') { %>
+                    <form action="/customer/order/cancel/<%= order.id %>" method="POST">
+                        <button type="submit" class="btn-cancel" onclick="return confirm('Cancel order? Your deposit will be refunded automatically.')">
+                            <i class="fa-solid fa-xmark"></i> Cancel Order
+                        </button>
+                    </form>
+                <% } else if (order.status === 'cancelled') { %>
+                    <div style="color: #e74c3c; font-weight: bold; border: 2px solid #e74c3c; padding: 15px; border-radius: 12px; background: #fff5f5;">
+                        <i class="fa-solid fa-ban"></i> This order was cancelled.<br>
+                        <small style="color: #64748b;">Refund Status: <%= order.payment_status %></small>
+                    </div>
+                <% } else { %>
+                    <p style="color: #64748b; font-style: italic; border-top: 1px solid #eee; pt: 15px;">
+                        <i class="fa-solid fa-lock"></i> Order is being prepared and cannot be cancelled.
+                    </p>
+                <% } %>
+                
+                <div style="margin-top: 25px;">
+                    <a href="/customer/home" style="text-decoration: none; color: #64748b; font-size: 0.9rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+  <% if (locals.payment_success) { %>
+    <script>
+        Swal.fire({
+            title: 'Payment Successful!',
+            text: 'Your order has been received.',
+            icon: 'success'
+        });
+    </script>
+<% } %>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders || SwiftBite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <style>
+        .order-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .confirmed { background: #e6fffa; color: #2c7a7b; }
+        .preparing { background: #feebc8; color: #9c4221; }
+        .delivered { background: #c6f6d5; color: #276749; }
+        .cancelled { background: #fed7d7; color: #9b2c2c; }
+        .btn-track {
+            text-decoration: none;
+            color: #ff4f18;
+            border: 1px solid #ff4f18;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .btn-track:hover { background: #ff4f18; color: white; }
+    </style>
+</head>
+<body style="background: #f8f9fa;">
+    <%- include("../partials/cHeader.ejs") %>
+    
+    <div style="display: flex;">
+        <%- include("../partials/asideCustomer.ejs") %>
+
+        <main style="flex: 1; padding: 40px;">
+            <h2 style="margin-bottom: 25px;">My Order History</h2>
+
+            <% if (orders.length === 0) { %>
+                <div style="text-align: center; margin-top: 50px;">
+                    <i class="fa-solid fa-receipt fa-3x" style="color: #cbd5e1;"></i>
+                    <p style="color: #64748b;">You haven't placed any orders yet.</p>
+                    <a href="/customer/home" style="color: #ff4f18;">Order something delicious!</a>
+                </div>
+            <% } else { %>
+                <div class="orders-container">
+                    <% orders.forEach(order => { %>
+                        <div class="order-card">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Order #<%= order.id %></h4>
+                                <small style="color: #94a3b8;"><%= new Date(order.created_at).toLocaleDateString() %></small>
+                                <p style="margin: 5px 0; font-size: 0.9rem;"><%= order.items %></p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="margin-bottom: 10px;">
+                                    <span class="status-tag <%= order.status %>">
+                                        <%= order.status.toUpperCase() %>
+                                    </span>
+                                </div>
+                                <a href="/customer/order/monitor/<%= order.id %>" class="btn-track">
+                                    <i class="fa-solid fa-eye"></i> Track
+                                </a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include("../partials/header.ejs") %>
+    <div class="dashboard-container">
+      <%- include("../partials/asideManager.ejs") %>
+      <main class="main-content" style="background: #f8f9fa; padding: 40px">
+        <div class="page-header" style="margin-bottom: 30px">
+          <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 5px">
+            Account Settings
+          </h2>
+          <p style="color: #64748b">
+            Manage your administrator profile and restaurant details
+          </p>
+        </div>
+        <div
+          style="
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+          "
+        >
+          <div style="position: relative">
+            <img
+              src="<%= user.profile_image %>?v=<%= Date.now() %>"
+              style="
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px #ff4d00 solid;
+              "
+            />
+
+            <form
+              id="profilePicForm"
+              action="/manager/update-profile-image"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <label
+                for="profileImageInput"
+                style="
+                  position: absolute;
+                  bottom: 5px;
+                  right: 5px;
+                  background: #1e293b;
+                  color: white;
+                  width: 35px;
+                  height: 35px;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border: 3px solid white;
+                  cursor: pointer;
+                "
+              >
+                <i class="fa-solid fa-camera" style="font-size: 0.9rem"></i>
+              </label>
+              <input
+                type="file"
+                id="profileImageInput"
+                name="profileImage"
+                style="display: none"
+                onchange="document.getElementById('profilePicForm').submit()"
+              />
+            </form>
+          </div>
+
+          <div>
+            <h2 style="margin: 0; font-size: 1.8rem; color: #1e293b">
+              <%= user.full_name %>
+            </h2>
+            <p style="margin: 5px 0 15px 0; color: #64748b">
+              <%= user.email %>
+            </p>
+            <div style="display: flex; gap: 10px; align-items: center">
+              <span
+                style="
+                  background: #ff4d00;
+                  color: white;
+                  padding: 5px 15px;
+                  border-radius: 20px;
+                  font-size: 0.75rem;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                "
+                >Admin</span
+              >
+              <span
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 5px;
+                  color: #10b981;
+                  font-weight: 700;
+                  font-size: 0.85rem;
+                "
+              >
+                <div
+                  style="
+                    width: 12px;
+                    height: 12px;
+                    background: #10b981;
+                    border-radius: 50%;
+                  "
+                ></div>
+                System Online
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div
+          style="
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+          "
+        >
+          <div style="position: relative">
+            <img
+              src="/images/IMG-20260112-WA0038.jpg"
+              style="
+                width: 130px;
+                height: 130px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 4px solid #fff;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+              "
+            />
+            <div
+              style="
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                background: #ff4d00;
+                color: white;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+              "
+            >
+              <i class="fa-solid fa-camera" style="font-size: 0.8rem"></i>
+            </div>
+          </div>
+          <div>
+            <h2 style="margin: 0; color: #1e293b"><%= user.full_name %></h2>
+            <p style="margin: 5px 0 10px 0; color: #64748b">
+              <%= user.email %>
+            </p>
+            <span class="role-tag">Manager</span>
+            <span
+              style="
+                background: #10b981;
+                color: white;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+                font-weight: 700;
+              "
+            >
+              <i class="fa-solid fa-circle" style="font-size: 0.5rem"></i>
+              System Online
+            </span>
+          </div>
+        </div> -->
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px">
+          <div
+            style="
+              background: white;
+              border-radius: 30px;
+              padding: 35px;
+              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            "
+          >
+            <h4 style="margin-top: 0; color: #1e293b">
+              <i
+                class="fa-solid fa-user-shield"
+                style="color: #ff4d00; margin-right: 10px"
+              ></i>
+              Personal & Security
+            </h4>
+            <form
+              action="/manager/update-profile"
+              method="POST"
+              style="margin-top: 25px"
+            >
+              <div style="margin-bottom: 15px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Full Name</label
+                >
+                <input
+                  type="text"
+                  name="full_name"
+                  value="<%= user.full_name %>"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                  "
+                />
+              </div>
+
+              <div style="margin-bottom: 15px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  name="email"
+                  value="<%= user.email %>"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                  "
+                />
+              </div>
+
+              <div style="margin-bottom: 20px; position: relative">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Update Password (Optional)</label
+                >
+                <input
+                  type="password"
+                  id="passwordInput"
+                  name="password"
+                  placeholder="Leave blank to keep current"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                  "
+                />
+                <i
+                  class="fa-solid fa-eye"
+                  id="togglePassword"
+                  style="
+                    position: absolute;
+                    right: 15px;
+                    top: 36px;
+                    cursor: pointer;
+                    color: #94a3b8;
+                  "
+                ></i>
+              </div>
+
+              <button
+                type="submit"
+                style="
+                  width: 100%;
+                  background: #ff4d00;
+                  color: white;
+                  border: none;
+                  padding: 14px;
+                  border-radius: 12px;
+                  font-weight: 800;
+                  cursor: pointer;
+                "
+              >
+                Save Profile Changes
+              </button>
+            </form>
+          </div>
+
+          <div
+            style="
+              background: white;
+              border-radius: 30px;
+              padding: 35px;
+              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            "
+          >
+            <h4 style="margin-top: 0; color: #1e293b">
+              <i
+                class="fa-solid fa-store"
+                style="color: #ff4d00; margin-right: 10px"
+              ></i>
+              Restaurant Details
+            </h4>
+            <form
+              action="/manager/update-restaurant"
+              method="POST"
+              enctype="multipart/form-data"
+              style="margin-top: 25px"
+            >
+              <div style="margin-bottom: 15px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Restaurant Name</label
+                >
+                <input
+                  type="text"
+                  name="resName"
+                  value="<%= user.res_name %>"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                  "
+                />
+              </div>
+
+              <div style="margin-bottom: 15px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Contact Number</label
+                >
+                <input
+                  type="text"
+                  name="contactNumber"
+                  value="<%= user.contact_number || '' %>"
+                  placeholder="+232..."
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                  "
+                />
+              </div>
+
+              <div style="margin-bottom: 15px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Physical Address</label
+                >
+                <textarea
+                  name="address"
+                  rows="2"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    border: 1px solid #f1f5f9;
+                    border-radius: 12px;
+                    background: #f8fafc;
+                    resize: none;
+                  "
+                >
+                <%= user.address || '' %></textarea
+                >
+              </div>
+
+              <div style="margin-bottom: 25px">
+                <label
+                  style="
+                    display: block;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: #64748b;
+                    margin-bottom: 8px;
+                  "
+                  >Change Restaurant Image</label
+                >
+                <input
+                  type="file"
+                  name="image"
+                  style="
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 0.8rem;
+                    border: 1px dashed #cbd5e1;
+                    border-radius: 12px;
+                  "
+                />
+              </div>
+
+              <button
+                type="submit"
+                style="
+                  width: 100%;
+                  background: #1e293b;
+                  color: white;
+                  border: none;
+                  padding: 14px;
+                  border-radius: 12px;
+                  font-weight: 800;
+                  cursor: pointer;
+                "
+              >
+                Update Restaurant Info
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const togglePassword = document.querySelector("#togglePassword");
+      const password = document.querySelector("#passwordInput");
+
+      togglePassword.addEventListener("click", function () {
+        const type =
+          password.getAttribute("type") === "password" ? "text" : "password";
+        password.setAttribute("type", type);
+        this.classList.toggle("fa-eye-slash");
+      });
+    </script>
+  </body>
+</html>
