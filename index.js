@@ -878,10 +878,10 @@ app.post("/customer/order/final-confirm", async (req, res) => {
       {
         headers: {
           "Monime-Version": "caph.2025-08-23",
-          "Monime-Space-Id": "spc-k6MBGmUZjaWWDisj57tCLHDqe42",
+          "Monime-Space-Id": " ",
           "Idempotency-Key": uuidv4(),
           Authorization:
-            "Bearer mon_KzqK9AkqDHEk5DNXmfsPZFDPeu3rfemarNme9aLvSY3XdDrEiP3XrIQC2D2F2uCG",
+            " ",
           "Content-Type": "application/json",
         },
       },
